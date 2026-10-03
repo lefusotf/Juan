@@ -102,19 +102,19 @@ namespace Vista.Consultas
             this.gbDatos.TabIndex = 4;
             this.gbDatos.TabStop = false;
             this.gbDatos.Text = "Datos";
-                        this.gbDatos.Controls.Add(this.lblcboMascota);
+                        this.gbDatos.Controls.Add(this.lblMascota);
                         this.gbDatos.Controls.Add(this.cboMascota);
-                        this.gbDatos.Controls.Add(this.lblcboVeterinario);
+                        this.gbDatos.Controls.Add(this.lblVeterinario);
                         this.gbDatos.Controls.Add(this.cboVeterinario);
-                        this.gbDatos.Controls.Add(this.lbldtpFecha);
+                        this.gbDatos.Controls.Add(this.lblFecha);
                         this.gbDatos.Controls.Add(this.dtpFecha);
-                        this.gbDatos.Controls.Add(this.lbltxtMotivo);
+                        this.gbDatos.Controls.Add(this.lblMotivo);
                         this.gbDatos.Controls.Add(this.txtMotivo);
-                        this.gbDatos.Controls.Add(this.lbltxtDiagnostico);
+                        this.gbDatos.Controls.Add(this.lblDiagnostico);
                         this.gbDatos.Controls.Add(this.txtDiagnostico);
-                        this.gbDatos.Controls.Add(this.lbltxtTratamiento);
+                        this.gbDatos.Controls.Add(this.lblTratamiento);
                         this.gbDatos.Controls.Add(this.txtTratamiento);
-                        this.gbDatos.Controls.Add(this.lbltxtObservaciones);
+                        this.gbDatos.Controls.Add(this.lblObservaciones);
                         this.gbDatos.Controls.Add(this.txtObservaciones);
             // 
             // lblMascota

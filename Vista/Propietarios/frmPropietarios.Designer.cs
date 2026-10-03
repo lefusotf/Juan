@@ -98,15 +98,15 @@ namespace Vista.Propietarios
             this.gbDatos.TabIndex = 4;
             this.gbDatos.TabStop = false;
             this.gbDatos.Text = "Datos";
-                        this.gbDatos.Controls.Add(this.lbltxtNombre);
+                        this.gbDatos.Controls.Add(this.lblNombre);
                         this.gbDatos.Controls.Add(this.txtNombre);
-                        this.gbDatos.Controls.Add(this.lbltxtDui);
+                        this.gbDatos.Controls.Add(this.lblDui);
                         this.gbDatos.Controls.Add(this.txtDui);
-                        this.gbDatos.Controls.Add(this.lbltxtTelefono);
+                        this.gbDatos.Controls.Add(this.lblTelefono);
                         this.gbDatos.Controls.Add(this.txtTelefono);
-                        this.gbDatos.Controls.Add(this.lbltxtCorreo);
+                        this.gbDatos.Controls.Add(this.lblCorreo);
                         this.gbDatos.Controls.Add(this.txtCorreo);
-                        this.gbDatos.Controls.Add(this.lbltxtDireccion);
+                        this.gbDatos.Controls.Add(this.lblDireccion);
                         this.gbDatos.Controls.Add(this.txtDireccion);
             // 
             // lblNombre

@@ -98,15 +98,15 @@ namespace Vista.Citas
             this.gbDatos.TabIndex = 4;
             this.gbDatos.TabStop = false;
             this.gbDatos.Text = "Datos";
-                        this.gbDatos.Controls.Add(this.lblcboMascota);
+                        this.gbDatos.Controls.Add(this.lblMascota);
                         this.gbDatos.Controls.Add(this.cboMascota);
-                        this.gbDatos.Controls.Add(this.lblcboVeterinario);
+                        this.gbDatos.Controls.Add(this.lblVeterinario);
                         this.gbDatos.Controls.Add(this.cboVeterinario);
-                        this.gbDatos.Controls.Add(this.lbldtpFechaHora);
+                        this.gbDatos.Controls.Add(this.lblFechaHora);
                         this.gbDatos.Controls.Add(this.dtpFechaHora);
-                        this.gbDatos.Controls.Add(this.lblcboEstado);
+                        this.gbDatos.Controls.Add(this.lblEstado);
                         this.gbDatos.Controls.Add(this.cboEstado);
-                        this.gbDatos.Controls.Add(this.lbltxtMotivo);
+                        this.gbDatos.Controls.Add(this.lblMotivo);
                         this.gbDatos.Controls.Add(this.txtMotivo);
             // 
             // lblMascota

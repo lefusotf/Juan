@@ -97,13 +97,13 @@ namespace Vista.Vacunas
             this.gbDatos.TabIndex = 4;
             this.gbDatos.TabStop = false;
             this.gbDatos.Text = "Datos";
-                        this.gbDatos.Controls.Add(this.lbltxtNombre);
+                        this.gbDatos.Controls.Add(this.lblNombre);
                         this.gbDatos.Controls.Add(this.txtNombre);
-                        this.gbDatos.Controls.Add(this.lblcboEspecie);
+                        this.gbDatos.Controls.Add(this.lblEspecie);
                         this.gbDatos.Controls.Add(this.cboEspecie);
-                        this.gbDatos.Controls.Add(this.lblnudIntervalo);
+                        this.gbDatos.Controls.Add(this.lblIntervalo);
                         this.gbDatos.Controls.Add(this.nudIntervalo);
-                        this.gbDatos.Controls.Add(this.lbltxtDescripcion);
+                        this.gbDatos.Controls.Add(this.lblDescripcion);
                         this.gbDatos.Controls.Add(this.txtDescripcion);
             // 
             // lblNombre

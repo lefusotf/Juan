@@ -100,17 +100,17 @@ namespace Vista.Usuarios
             this.gbDatos.TabIndex = 4;
             this.gbDatos.TabStop = false;
             this.gbDatos.Text = "Datos";
-                        this.gbDatos.Controls.Add(this.lbltxtNombre);
+                        this.gbDatos.Controls.Add(this.lblNombre);
                         this.gbDatos.Controls.Add(this.txtNombre);
-                        this.gbDatos.Controls.Add(this.lbltxtUsuario);
+                        this.gbDatos.Controls.Add(this.lblUsuario);
                         this.gbDatos.Controls.Add(this.txtUsuario);
-                        this.gbDatos.Controls.Add(this.lbltxtContrasena);
+                        this.gbDatos.Controls.Add(this.lblContrasena);
                         this.gbDatos.Controls.Add(this.txtContrasena);
-                        this.gbDatos.Controls.Add(this.lbltxtCorreo);
+                        this.gbDatos.Controls.Add(this.lblCorreo);
                         this.gbDatos.Controls.Add(this.txtCorreo);
-                        this.gbDatos.Controls.Add(this.lblcboRol);
+                        this.gbDatos.Controls.Add(this.lblRol);
                         this.gbDatos.Controls.Add(this.cboRol);
-                        this.gbDatos.Controls.Add(this.lblcboEstado);
+                        this.gbDatos.Controls.Add(this.lblEstado);
                         this.gbDatos.Controls.Add(this.cboEstado);
             // 
             // lblNombre

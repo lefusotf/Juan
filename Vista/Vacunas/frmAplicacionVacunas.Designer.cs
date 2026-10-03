@@ -100,17 +100,17 @@ namespace Vista.Vacunas
             this.gbDatos.TabIndex = 4;
             this.gbDatos.TabStop = false;
             this.gbDatos.Text = "Datos";
-                        this.gbDatos.Controls.Add(this.lblcboMascota);
+                        this.gbDatos.Controls.Add(this.lblMascota);
                         this.gbDatos.Controls.Add(this.cboMascota);
-                        this.gbDatos.Controls.Add(this.lblcboVacuna);
+                        this.gbDatos.Controls.Add(this.lblVacuna);
                         this.gbDatos.Controls.Add(this.cboVacuna);
-                        this.gbDatos.Controls.Add(this.lblcboVeterinario);
+                        this.gbDatos.Controls.Add(this.lblVeterinario);
                         this.gbDatos.Controls.Add(this.cboVeterinario);
-                        this.gbDatos.Controls.Add(this.lbldtpAplicacion);
+                        this.gbDatos.Controls.Add(this.lblAplicacion);
                         this.gbDatos.Controls.Add(this.dtpAplicacion);
-                        this.gbDatos.Controls.Add(this.lbldtpProxima);
+                        this.gbDatos.Controls.Add(this.lblProxima);
                         this.gbDatos.Controls.Add(this.dtpProxima);
-                        this.gbDatos.Controls.Add(this.lbltxtObservaciones);
+                        this.gbDatos.Controls.Add(this.lblObservaciones);
                         this.gbDatos.Controls.Add(this.txtObservaciones);
             // 
             // lblMascota

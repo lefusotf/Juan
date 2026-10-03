@@ -105,21 +105,21 @@ namespace Vista.Mascotas
             this.gbDatos.TabIndex = 4;
             this.gbDatos.TabStop = false;
             this.gbDatos.Text = "Datos";
-                        this.gbDatos.Controls.Add(this.lblcboPropietario);
+                        this.gbDatos.Controls.Add(this.lblPropietario);
                         this.gbDatos.Controls.Add(this.cboPropietario);
-                        this.gbDatos.Controls.Add(this.lbltxtNombre);
+                        this.gbDatos.Controls.Add(this.lblNombre);
                         this.gbDatos.Controls.Add(this.txtNombre);
-                        this.gbDatos.Controls.Add(this.lblcboEspecie);
+                        this.gbDatos.Controls.Add(this.lblEspecie);
                         this.gbDatos.Controls.Add(this.cboEspecie);
-                        this.gbDatos.Controls.Add(this.lbltxtRaza);
+                        this.gbDatos.Controls.Add(this.lblRaza);
                         this.gbDatos.Controls.Add(this.txtRaza);
-                        this.gbDatos.Controls.Add(this.lblcboSexo);
+                        this.gbDatos.Controls.Add(this.lblSexo);
                         this.gbDatos.Controls.Add(this.cboSexo);
-                        this.gbDatos.Controls.Add(this.lbldtpNacimiento);
+                        this.gbDatos.Controls.Add(this.lblNacimiento);
                         this.gbDatos.Controls.Add(this.dtpNacimiento);
-                        this.gbDatos.Controls.Add(this.lblnudPeso);
+                        this.gbDatos.Controls.Add(this.lblPeso);
                         this.gbDatos.Controls.Add(this.nudPeso);
-                        this.gbDatos.Controls.Add(this.lbltxtColor);
+                        this.gbDatos.Controls.Add(this.lblColor);
                         this.gbDatos.Controls.Add(this.txtColor);
             // 
             // lblPropietario
