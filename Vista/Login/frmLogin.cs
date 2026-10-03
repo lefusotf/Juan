@@ -19,6 +19,15 @@ namespace Vista.Login
             InitializeComponent();
         }
 
+        // Diseño adaptable: en ventanas angostas se oculta el panel de la marca y el formulario ocupa todo el ancho
+        private void frmLogin_Resize(object sender, EventArgs e)
+        {
+            bool angosto = ClientSize.Width < 820;
+            pnlMarca.Visible = !angosto;
+            tlpRaiz.ColumnStyles[0].Width = angosto ? 0 : 45;
+            tlpRaiz.ColumnStyles[1].Width = angosto ? 100 : 55;
+        }
+
         private void chkMostrar_CheckedChanged(object sender, EventArgs e)
         {
             txtContrasena.UseSystemPasswordChar = !chkMostrar.Checked;

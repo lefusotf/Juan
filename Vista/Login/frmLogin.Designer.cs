@@ -19,11 +19,13 @@ namespace Vista.Login
         {
             this.tlpRaiz = new System.Windows.Forms.TableLayoutPanel();
             this.pnlMarca = new Vista.Comun.PanelDegradado();
+            this.tlpCentroMarca = new System.Windows.Forms.TableLayoutPanel();
             this.pnlMarcaContenido = new System.Windows.Forms.Panel();
             this.lblLema = new System.Windows.Forms.Label();
             this.lblMarca = new System.Windows.Forms.Label();
             this.lblLogo = new System.Windows.Forms.Label();
             this.pnlLogin = new System.Windows.Forms.Panel();
+            this.tlpCentroLogin = new System.Windows.Forms.TableLayoutPanel();
             this.pnlFormulario = new System.Windows.Forms.Panel();
             this.lblBienvenida = new System.Windows.Forms.Label();
             this.lblSubtitulo = new System.Windows.Forms.Label();
@@ -36,8 +38,10 @@ namespace Vista.Login
             this.btnSalir = new Vista.Comun.BotonModerno();
             this.tlpRaiz.SuspendLayout();
             this.pnlMarca.SuspendLayout();
+            this.tlpCentroMarca.SuspendLayout();
             this.pnlMarcaContenido.SuspendLayout();
             this.pnlLogin.SuspendLayout();
+            this.tlpCentroLogin.SuspendLayout();
             this.pnlFormulario.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -59,14 +63,29 @@ namespace Vista.Login
             this.pnlMarca.ColorInicio = System.Drawing.Color.FromArgb(13, 148, 136);
             this.pnlMarca.Angulo = 120F;
             this.pnlMarca.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlMarca.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this.pnlMarca.Name = "pnlMarca";
-            this.pnlMarca.Controls.Add(this.pnlMarcaContenido);
+            this.pnlMarca.Controls.Add(this.tlpCentroMarca);
+            // 
+            // tlpCentroMarca
+            // 
+            this.tlpCentroMarca.BackColor = System.Drawing.Color.Transparent;
+            this.tlpCentroMarca.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpCentroMarca.Name = "tlpCentroMarca";
+            this.tlpCentroMarca.ColumnCount = 3;
+            this.tlpCentroMarca.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpCentroMarca.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize));
+            this.tlpCentroMarca.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpCentroMarca.RowCount = 3;
+            this.tlpCentroMarca.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpCentroMarca.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
+            this.tlpCentroMarca.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpCentroMarca.Controls.Add(this.pnlMarcaContenido, 1, 1);
             // 
             // pnlMarcaContenido
             // 
-            this.pnlMarcaContenido.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pnlMarcaContenido.BackColor = System.Drawing.Color.Transparent;
-            this.pnlMarcaContenido.Location = new System.Drawing.Point(22, 130);
+            this.pnlMarcaContenido.Margin = new System.Windows.Forms.Padding(20, 20, 20, 20);
             this.pnlMarcaContenido.Name = "pnlMarcaContenido";
             this.pnlMarcaContenido.Size = new System.Drawing.Size(360, 300);
             this.pnlMarcaContenido.Controls.Add(this.lblLema);
@@ -81,7 +100,8 @@ namespace Vista.Login
             this.lblLema.ForeColor = System.Drawing.Color.FromArgb(204, 251, 241);
             this.lblLema.Height = 90;
             this.lblLema.Name = "lblLema";
-            this.lblLema.Text = "Sistema de gestión veterinaria\nExpedientes, vacunas y citas en un solo lugar.";
+            this.lblLema.Text = "Sistema de gestión veterinaria
+Expedientes, vacunas y citas en un solo lugar.";
             this.lblLema.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // lblMarca
@@ -103,7 +123,7 @@ namespace Vista.Login
             this.lblLogo.ForeColor = System.Drawing.Color.White;
             this.lblLogo.Height = 120;
             this.lblLogo.Name = "lblLogo";
-            this.lblLogo.Text = "\U0001F43E";
+            this.lblLogo.Text = "🐾";
             this.lblLogo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pnlLogin
@@ -111,15 +131,29 @@ namespace Vista.Login
             this.pnlLogin.BackColor = System.Drawing.Color.White;
             this.pnlLogin.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlLogin.Name = "pnlLogin";
-            this.pnlLogin.Controls.Add(this.pnlFormulario);
+            this.pnlLogin.Controls.Add(this.tlpCentroLogin);
+            // 
+            // tlpCentroLogin
+            // 
+            this.tlpCentroLogin.BackColor = System.Drawing.Color.White;
+            this.tlpCentroLogin.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpCentroLogin.Name = "tlpCentroLogin";
+            this.tlpCentroLogin.ColumnCount = 3;
+            this.tlpCentroLogin.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpCentroLogin.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize));
+            this.tlpCentroLogin.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpCentroLogin.RowCount = 3;
+            this.tlpCentroLogin.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpCentroLogin.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
+            this.tlpCentroLogin.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpCentroLogin.Controls.Add(this.pnlFormulario, 1, 1);
             // 
             // pnlFormulario
             // 
-            this.pnlFormulario.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pnlFormulario.BackColor = System.Drawing.Color.White;
-            this.pnlFormulario.Location = new System.Drawing.Point(67, 65);
             this.pnlFormulario.Name = "pnlFormulario";
             this.pnlFormulario.Size = new System.Drawing.Size(360, 430);
+            this.pnlFormulario.Margin = new System.Windows.Forms.Padding(24, 24, 24, 24);
             this.pnlFormulario.Controls.Add(this.lblBienvenida);
             this.pnlFormulario.Controls.Add(this.lblSubtitulo);
             this.pnlFormulario.Controls.Add(this.lblUsuario);
@@ -223,17 +257,21 @@ namespace Vista.Login
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.White;
             this.CancelButton = this.btnSalir;
-            this.ClientSize = new System.Drawing.Size(900, 560);
+            this.ClientSize = new System.Drawing.Size(900, 600);
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(780, 600);
+            this.MinimumSize = new System.Drawing.Size(460, 560);
             this.Name = "frmLogin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "VetCare - Iniciar sesión";
             this.Controls.Add(this.tlpRaiz);
+            this.Resize += new System.EventHandler(this.frmLogin_Resize);
             this.pnlFormulario.ResumeLayout(false);
+            this.tlpCentroLogin.ResumeLayout(false);
+            this.tlpCentroLogin.PerformLayout();
             this.pnlLogin.ResumeLayout(false);
             this.pnlMarcaContenido.ResumeLayout(false);
+            this.tlpCentroMarca.ResumeLayout(false);
+            this.tlpCentroMarca.PerformLayout();
             this.pnlMarca.ResumeLayout(false);
             this.tlpRaiz.ResumeLayout(false);
             this.tlpRaiz.PerformLayout();
@@ -245,11 +283,13 @@ namespace Vista.Login
 
         private System.Windows.Forms.TableLayoutPanel tlpRaiz;
         private Vista.Comun.PanelDegradado pnlMarca;
+        private System.Windows.Forms.TableLayoutPanel tlpCentroMarca;
         private System.Windows.Forms.Panel pnlMarcaContenido;
         private System.Windows.Forms.Label lblLema;
         private System.Windows.Forms.Label lblMarca;
         private System.Windows.Forms.Label lblLogo;
         private System.Windows.Forms.Panel pnlLogin;
+        private System.Windows.Forms.TableLayoutPanel tlpCentroLogin;
         private System.Windows.Forms.Panel pnlFormulario;
         private System.Windows.Forms.Label lblBienvenida;
         private System.Windows.Forms.Label lblSubtitulo;
