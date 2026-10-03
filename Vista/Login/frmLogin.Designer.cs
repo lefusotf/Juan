@@ -230,7 +230,7 @@ namespace Vista.Login
             this.Name = "frmLogin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "VetCare - Iniciar sesión";
-            this.frmLogin.Controls.Add(this.tlpRaiz);
+            this.Controls.Add(this.tlpRaiz);
             this.pnlFormulario.ResumeLayout(false);
             this.pnlLogin.ResumeLayout(false);
             this.pnlMarcaContenido.ResumeLayout(false);

@@ -150,7 +150,7 @@ namespace Vista.Bitacora
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.Name = "frmBitacora";
             this.Text = "Bitácora";
-            this.frmBitacora.Controls.Add(this.tlpRaiz);
+            this.Controls.Add(this.tlpRaiz);
             this.Load += new System.EventHandler(this.frmBitacora_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
             this.pnlTabla.ResumeLayout(false);

@@ -71,8 +71,8 @@ namespace Vista.Vacunas
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.Name = "frmVacunas";
             this.Text = "Vacunas";
-            this.frmVacunas.Controls.Add(this.pnlContenido);
-            this.frmVacunas.Controls.Add(this.flpTabs);
+            this.Controls.Add(this.pnlContenido);
+            this.Controls.Add(this.flpTabs);
             this.Load += new System.EventHandler(this.frmVacunas_Load);
             this.flpTabs.ResumeLayout(false);
             this.flpTabs.PerformLayout();

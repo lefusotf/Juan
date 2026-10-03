@@ -238,9 +238,9 @@ namespace Vista.Dashboard
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "VetCare - Sistema de Gestión Veterinaria";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.frmDashboardPrincipal.Controls.Add(this.pnlContenedor);
-            this.frmDashboardPrincipal.Controls.Add(this.pnlTop);
-            this.frmDashboardPrincipal.Controls.Add(this.pnlMenu);
+            this.Controls.Add(this.pnlContenedor);
+            this.Controls.Add(this.pnlTop);
+            this.Controls.Add(this.pnlMenu);
             this.Load += new System.EventHandler(this.frmDashboardPrincipal_Load);
             this.Resize += new System.EventHandler(this.frmDashboardPrincipal_Resize);
             this.pnlMenu.ResumeLayout(false);

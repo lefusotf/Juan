@@ -368,7 +368,7 @@ namespace Vista.Vacunas
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.Name = "frmAplicacionVacunas";
             this.Text = "Aplicación de vacunas";
-            this.frmAplicacionVacunas.Controls.Add(this.tlpRaiz);
+            this.Controls.Add(this.tlpRaiz);
             this.Load += new System.EventHandler(this.frmAplicacionVacunas_Load);
             this.Resize += new System.EventHandler(this.frmAplicacionVacunas_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();

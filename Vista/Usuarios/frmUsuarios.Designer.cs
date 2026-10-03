@@ -366,7 +366,7 @@ namespace Vista.Usuarios
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.Name = "frmUsuarios";
             this.Text = "Gestión de usuarios";
-            this.frmUsuarios.Controls.Add(this.tlpRaiz);
+            this.Controls.Add(this.tlpRaiz);
             this.Load += new System.EventHandler(this.frmUsuarios_Load);
             this.Resize += new System.EventHandler(this.frmUsuarios_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();

@@ -415,7 +415,7 @@ namespace Vista.Mascotas
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.Name = "frmMascotas";
             this.Text = "Mascotas";
-            this.frmMascotas.Controls.Add(this.tlpRaiz);
+            this.Controls.Add(this.tlpRaiz);
             this.Load += new System.EventHandler(this.frmMascotas_Load);
             this.Resize += new System.EventHandler(this.frmMascotas_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.nudPeso)).EndInit();

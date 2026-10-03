@@ -358,7 +358,7 @@ namespace Vista.Dashboard
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.Name = "ucInicio";
             this.Size = new System.Drawing.Size(1000, 680);
-            this.ucInicio.Controls.Add(this.tlpRaiz);
+            this.Controls.Add(this.tlpRaiz);
             this.Load += new System.EventHandler(this.ucInicio_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvCitas)).EndInit();
             this.pnlCitas.ResumeLayout(false);

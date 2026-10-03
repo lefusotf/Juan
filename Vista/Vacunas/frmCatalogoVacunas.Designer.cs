@@ -325,7 +325,7 @@ namespace Vista.Vacunas
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.Name = "frmCatalogoVacunas";
             this.Text = "Catálogo de vacunas";
-            this.frmCatalogoVacunas.Controls.Add(this.tlpRaiz);
+            this.Controls.Add(this.tlpRaiz);
             this.Load += new System.EventHandler(this.frmCatalogoVacunas_Load);
             this.Resize += new System.EventHandler(this.frmCatalogoVacunas_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.nudIntervalo)).EndInit();

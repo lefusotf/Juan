@@ -165,7 +165,7 @@ namespace Vista.Usuarios
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.Name = "frmRoles";
             this.Text = "Roles y permisos";
-            this.frmRoles.Controls.Add(this.tlpRaiz);
+            this.Controls.Add(this.tlpRaiz);
             this.Load += new System.EventHandler(this.frmRoles_Load);
             this.pnlPermisos.ResumeLayout(false);
             this.pnlRoles.ResumeLayout(false);

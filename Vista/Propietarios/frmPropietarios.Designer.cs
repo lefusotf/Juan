@@ -342,7 +342,7 @@ namespace Vista.Propietarios
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.Name = "frmPropietarios";
             this.Text = "Propietarios";
-            this.frmPropietarios.Controls.Add(this.tlpRaiz);
+            this.Controls.Add(this.tlpRaiz);
             this.Load += new System.EventHandler(this.frmPropietarios_Load);
             this.Resize += new System.EventHandler(this.frmPropietarios_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();

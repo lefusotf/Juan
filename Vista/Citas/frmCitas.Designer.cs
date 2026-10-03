@@ -347,7 +347,7 @@ namespace Vista.Citas
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.Name = "frmCitas";
             this.Text = "Citas médicas";
-            this.frmCitas.Controls.Add(this.tlpRaiz);
+            this.Controls.Add(this.tlpRaiz);
             this.Load += new System.EventHandler(this.frmCitas_Load);
             this.Resize += new System.EventHandler(this.frmCitas_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();

@@ -397,7 +397,7 @@ namespace Vista.Consultas
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.Name = "frmConsultas";
             this.Text = "Historial médico (consultas)";
-            this.frmConsultas.Controls.Add(this.tlpRaiz);
+            this.Controls.Add(this.tlpRaiz);
             this.Load += new System.EventHandler(this.frmConsultas_Load);
             this.Resize += new System.EventHandler(this.frmConsultas_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
