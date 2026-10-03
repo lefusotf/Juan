@@ -35,7 +35,8 @@ Veterinaria.sln
 │   ├── Seguridad/                 BCrypt, sesión y códigos de permiso
 │   └── Utilidades/                Logger (archivo + tabla bitácora)
 ├── Vista/                         CAPA VISTA (Windows Forms; cada formulario tiene .cs + .Designer.cs)
-│   ├── Comun/                     Mensajes (MessageBox), validaciones, utilidades de tabla
+│   ├── Comun/                     Tema, controles propios (BotonModerno, BotonMenu, PanelTarjeta, PanelDegradado),
+│   │                              diseño adaptable (Responsive), Mensajes (MessageBox), validaciones
 │   ├── Login/  Dashboard/  Usuarios/  Propietarios/  Mascotas/
 │   └── Citas/  Consultas/  Vacunas/  Bitacora/
 └── Documentacion/Documentacion.md Portada, índice, introducción, casos de uso, ER y diccionario de datos

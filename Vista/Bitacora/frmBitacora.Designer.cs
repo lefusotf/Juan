@@ -17,142 +17,160 @@ namespace Vista.Bitacora
 
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle estiloEncabezado = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle estiloAlterno = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle estiloCelda = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle estiloEnc0 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle estiloAlt0 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle estiloCelda0 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.tlpRaiz = new System.Windows.Forms.TableLayoutPanel();
             this.lblTitulo = new System.Windows.Forms.Label();
-            this.lblNivel = new System.Windows.Forms.Label();
+            this.flpFiltros = new System.Windows.Forms.FlowLayoutPanel();
             this.cboNivel = new System.Windows.Forms.ComboBox();
-            this.lblBuscar = new System.Windows.Forms.Label();
             this.txtBuscar = new System.Windows.Forms.TextBox();
-            this.btnBuscar = new System.Windows.Forms.Button();
+            this.btnBuscar = new Vista.Comun.BotonModerno();
+            this.pnlTabla = new Vista.Comun.PanelTarjeta();
             this.dgv = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
+            this.tlpRaiz.SuspendLayout();
+            this.flpFiltros.SuspendLayout();
+            this.pnlTabla.SuspendLayout();
             this.SuspendLayout();
-            estiloEncabezado.BackColor = System.Drawing.Color.FromArgb(31, 122, 109);
-            estiloEncabezado.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            estiloEncabezado.ForeColor = System.Drawing.Color.White;
-            estiloEncabezado.SelectionBackColor = System.Drawing.Color.FromArgb(31, 122, 109);
-            estiloEncabezado.SelectionForeColor = System.Drawing.Color.White;
-            estiloCelda.SelectionBackColor = System.Drawing.Color.FromArgb(200, 230, 225);
-            estiloCelda.SelectionForeColor = System.Drawing.Color.Black;
-            estiloAlterno.BackColor = System.Drawing.Color.FromArgb(247, 250, 249);
+            // 
+            // tlpRaiz
+            // 
+            this.tlpRaiz.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpRaiz.Name = "tlpRaiz";
+            this.tlpRaiz.Padding = new System.Windows.Forms.Padding(28, 24, 28, 20);
+            this.tlpRaiz.ColumnCount = 1;
+            this.tlpRaiz.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpRaiz.RowCount = 3;
+            this.tlpRaiz.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
+            this.tlpRaiz.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
+            this.tlpRaiz.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpRaiz.Controls.Add(this.lblTitulo, 0, 0);
+            this.tlpRaiz.Controls.Add(this.flpFiltros, 0, 1);
+            this.tlpRaiz.Controls.Add(this.pnlTabla, 0, 2);
             // 
             // lblTitulo
             // 
             this.lblTitulo.AutoSize = true;
-            this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.lblTitulo.ForeColor = System.Drawing.Color.FromArgb(22, 90, 80);
-            this.lblTitulo.Location = new System.Drawing.Point(14, 10);
+            this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Bold);
+            this.lblTitulo.ForeColor = System.Drawing.Color.FromArgb(17, 94, 89);
+            this.lblTitulo.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(220, 30);
-            this.lblTitulo.TabIndex = 0;
             this.lblTitulo.Text = "Bitácora del sistema";
             // 
-            // lblNivel
+            // flpFiltros
             // 
-            this.lblNivel.AutoSize = true;
-            this.lblNivel.Location = new System.Drawing.Point(16, 59);
-            this.lblNivel.Name = "lblNivel";
-            this.lblNivel.Size = new System.Drawing.Size(42, 19);
-            this.lblNivel.TabIndex = 1;
-            this.lblNivel.Text = "Nivel:";
+            this.flpFiltros.AutoSize = true;
+            this.flpFiltros.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flpFiltros.Margin = new System.Windows.Forms.Padding(0, 10, 0, 14);
+            this.flpFiltros.Name = "flpFiltros";
+            this.flpFiltros.Controls.Add(this.cboNivel);
+            this.flpFiltros.Controls.Add(this.txtBuscar);
+            this.flpFiltros.Controls.Add(this.btnBuscar);
             // 
             // cboNivel
             // 
             this.cboNivel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboNivel.FormattingEnabled = true;
-            this.cboNivel.Items.AddRange(new object[] {"Todos", "INFO", "ERROR"});
-            this.cboNivel.Location = new System.Drawing.Point(64, 56);
+            this.cboNivel.Margin = new System.Windows.Forms.Padding(0, 4, 10, 0);
             this.cboNivel.Name = "cboNivel";
-            this.cboNivel.Size = new System.Drawing.Size(120, 25);
-            this.cboNivel.TabIndex = 2;
-            // 
-            // lblBuscar
-            // 
-            this.lblBuscar.AutoSize = true;
-            this.lblBuscar.Location = new System.Drawing.Point(204, 59);
-            this.lblBuscar.Name = "lblBuscar";
-            this.lblBuscar.Size = new System.Drawing.Size(55, 19);
-            this.lblBuscar.TabIndex = 3;
-            this.lblBuscar.Text = "Buscar:";
+            this.cboNivel.Size = new System.Drawing.Size(130, 28);
+            this.cboNivel.Items.AddRange(new object[] {"Todos", "INFO", "ERROR"});
             // 
             // txtBuscar
             // 
-            this.txtBuscar.Location = new System.Drawing.Point(265, 56);
+            this.txtBuscar.Margin = new System.Windows.Forms.Padding(0, 4, 10, 0);
             this.txtBuscar.Name = "txtBuscar";
-            this.txtBuscar.Size = new System.Drawing.Size(260, 25);
-            this.txtBuscar.TabIndex = 4;
+            this.txtBuscar.Size = new System.Drawing.Size(320, 27);
             this.txtBuscar.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtBuscar_KeyDown);
             // 
             // btnBuscar
             // 
-            this.btnBuscar.BackColor = System.Drawing.Color.FromArgb(108, 117, 125);
-            this.btnBuscar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnBuscar.FlatAppearance.BorderSize = 0;
-            this.btnBuscar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBuscar.BackColor = System.Drawing.Color.FromArgb(100, 116, 139);
             this.btnBuscar.ForeColor = System.Drawing.Color.White;
-            this.btnBuscar.Location = new System.Drawing.Point(535, 54);
+            this.btnBuscar.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnBuscar.Name = "btnBuscar";
-            this.btnBuscar.Size = new System.Drawing.Size(80, 30);
-            this.btnBuscar.TabIndex = 5;
+            this.btnBuscar.Size = new System.Drawing.Size(110, 34);
             this.btnBuscar.Text = "Buscar";
             this.btnBuscar.UseVisualStyleBackColor = false;
+            this.btnBuscar.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this.btnBuscar.Click += new System.EventHandler(this.btnBuscar_Click);
+            // 
+            // pnlTabla
+            // 
+            this.pnlTabla.Name = "pnlTabla";
+            this.pnlTabla.Padding = new System.Windows.Forms.Padding(10, 10, 10, 10);
+            this.pnlTabla.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlTabla.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
+            this.pnlTabla.Controls.Add(this.dgv);
             // 
             // dgv
             // 
+            this.dgv.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgv.Name = "dgv";
+            estiloEnc0.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            estiloEnc0.BackColor = System.Drawing.Color.FromArgb(241, 245, 244);
+            estiloEnc0.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+            estiloEnc0.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+            estiloEnc0.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            estiloEnc0.SelectionBackColor = System.Drawing.Color.FromArgb(241, 245, 244);
+            estiloEnc0.SelectionForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+            estiloCelda0.BackColor = System.Drawing.Color.White;
+            estiloCelda0.ForeColor = System.Drawing.Color.FromArgb(31, 41, 55);
+            estiloCelda0.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            estiloCelda0.SelectionBackColor = System.Drawing.Color.FromArgb(204, 251, 241);
+            estiloCelda0.SelectionForeColor = System.Drawing.Color.FromArgb(17, 24, 39);
+            estiloAlt0.BackColor = System.Drawing.Color.FromArgb(249, 251, 251);
             this.dgv.AllowUserToAddRows = false;
             this.dgv.AllowUserToDeleteRows = false;
             this.dgv.AllowUserToResizeRows = false;
-            this.dgv.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgv.AlternatingRowsDefaultCellStyle = estiloAlterno;
+            this.dgv.AlternatingRowsDefaultCellStyle = estiloAlt0;
             this.dgv.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv.BackgroundColor = System.Drawing.Color.White;
             this.dgv.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dgv.ColumnHeadersDefaultCellStyle = estiloEncabezado;
-            this.dgv.ColumnHeadersHeight = 34;
+            this.dgv.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+            this.dgv.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.dgv.ColumnHeadersDefaultCellStyle = estiloEnc0;
+            this.dgv.ColumnHeadersHeight = 42;
             this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.dgv.DefaultCellStyle = estiloCelda;
+            this.dgv.DefaultCellStyle = estiloCelda0;
             this.dgv.EnableHeadersVisualStyles = false;
-            this.dgv.Location = new System.Drawing.Point(16, 98);
+            this.dgv.GridColor = System.Drawing.Color.FromArgb(226, 232, 240);
             this.dgv.MultiSelect = false;
-            this.dgv.Name = "dgv";
             this.dgv.ReadOnly = true;
             this.dgv.RowHeadersVisible = false;
+            this.dgv.RowTemplate.Height = 38;
             this.dgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv.Size = new System.Drawing.Size(960, 526);
-            this.dgv.TabIndex = 6;
             // 
             // frmBitacora
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackColor = System.Drawing.Color.FromArgb(244, 247, 246);
-            this.ClientSize = new System.Drawing.Size(992, 640);
-            this.Controls.Add(this.lblTitulo);
-            this.Controls.Add(this.lblNivel);
-            this.Controls.Add(this.cboNivel);
-            this.Controls.Add(this.lblBuscar);
-            this.Controls.Add(this.txtBuscar);
-            this.Controls.Add(this.btnBuscar);
-            this.Controls.Add(this.dgv);
+            this.BackColor = System.Drawing.Color.FromArgb(241, 245, 244);
+            this.ClientSize = new System.Drawing.Size(1000, 680);
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.Name = "frmBitacora";
             this.Text = "Bitácora";
+            this.frmBitacora.Controls.Add(this.tlpRaiz);
             this.Load += new System.EventHandler(this.frmBitacora_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
+            this.pnlTabla.ResumeLayout(false);
+            this.flpFiltros.ResumeLayout(false);
+            this.flpFiltros.PerformLayout();
+            this.tlpRaiz.ResumeLayout(false);
+            this.tlpRaiz.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
         }
 
         #endregion
 
+        private System.Windows.Forms.TableLayoutPanel tlpRaiz;
         private System.Windows.Forms.Label lblTitulo;
-        private System.Windows.Forms.Label lblNivel;
+        private System.Windows.Forms.FlowLayoutPanel flpFiltros;
         private System.Windows.Forms.ComboBox cboNivel;
-        private System.Windows.Forms.Label lblBuscar;
         private System.Windows.Forms.TextBox txtBuscar;
-        private System.Windows.Forms.Button btnBuscar;
+        private Vista.Comun.BotonModerno btnBuscar;
+        private Vista.Comun.PanelTarjeta pnlTabla;
         private System.Windows.Forms.DataGridView dgv;
     }
 }

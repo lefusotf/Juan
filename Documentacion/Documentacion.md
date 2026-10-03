@@ -84,7 +84,7 @@ y en la tabla `bitacora`.
 | RNF-01 | Arquitectura MV: la Vista no contiene SQL; el Modelo no contiene formularios |
 | RNF-02 | Contraseñas almacenadas únicamente como hash BCrypt (factor de costo 11) |
 | RNF-03 | Consultas parametrizadas (prevención de inyección SQL) y conexiones liberadas con `using` |
-| RNF-04 | Interfaz uniforme: todos los mantenimientos comparten el mismo diseño y se editan en el Designer |
+| RNF-04 | Interfaz moderna, uniforme y adaptable (menú lateral que se contrae, campos que se reacomodan según el ancho); se edita en el Designer |
 | RNF-05 | Todo error se registra (archivo `Logs/` y tabla `bitacora`) y se informa al usuario con un mensaje claro |
 | RNF-06 | Base de datos SQL Server con integridad referencial y restricciones `CHECK`/`UNIQUE` |
 
@@ -105,7 +105,7 @@ flowchart LR
     subgraph Vista["Capa Vista (Vista.csproj - Windows Forms)"]
         L[Login] --> D[Dashboard]
         D --> F[Formularios CRUD]
-        C[Comun: Mensajes, Validaciones, GridUtil]
+        C[Comun: Tema, controles propios, Responsive, Mensajes, Validaciones]
     end
     subgraph Modelo["Capa Modelo (Modelos.csproj)"]
         DA[Datos: UsuarioDatos, MascotaDatos...]
@@ -130,7 +130,7 @@ flowchart LR
 | `Modelos/Datos` | Operaciones CRUD por entidad (únicas con SQL) |
 | `Modelos/Seguridad` | Cifrado BCrypt, sesión actual y códigos de permisos |
 | `Modelos/Utilidades` | `Logger` (archivo + bitácora) |
-| `Vista/Comun` | `Mensajes` (MessageBox y errores SQL), `Validaciones`, `GridUtil` |
+| `Vista/Comun` | `Tema` (paleta), controles propios (`BotonModerno`, `BotonMenu`, `PanelTarjeta`, `PanelDegradado`), `Responsive` (diseño adaptable), `Mensajes` (MessageBox y errores SQL), `Validaciones`, `GridUtil` |
 | `Vista/<Módulo>` | Formularios agrupados por funcionalidad; cada uno con su `.cs` (lógica) y su `.Designer.cs` (diseño visual) |
 
 ## 4. Diagrama de casos de uso
@@ -403,7 +403,7 @@ erDiagram
 - **Autorización:** al iniciar sesión se cargan los permisos del rol en `Sesion`. El menú solo muestra los
   módulos permitidos y los botones Nuevo/Guardar/Eliminar se deshabilitan si falta el permiso `*_GESTIONAR`.
 - **Inyección SQL:** todas las consultas usan `SqlParameter`.
-- **Interfaz:** todos los formularios se diseñan visualmente en el Diseñador de Windows Forms.
+- **Interfaz:** formularios diseñados en el Diseñador de Windows Forms con una paleta turquesa, tarjetas redondeadas, pantalla de inicio con estadísticas, menú lateral con iconos que se contrae en ventanas angostas y campos que pasan de dos columnas a una según el ancho.
 - **Excepciones:** cada acción de la Vista está protegida con `try/catch`. `Mensajes.Error` traduce los códigos de
   `SqlException` (duplicados 2627/2601, integridad referencial 547, servidor inaccesible 53, BD inexistente 4060,
   login 18456) a mensajes comprensibles en un `MessageBox`, y `Logger.Error` guarda el detalle en

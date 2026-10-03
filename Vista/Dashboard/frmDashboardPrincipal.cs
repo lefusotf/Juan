@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Windows.Forms;
 using Modelos.Seguridad;
 using Modelos.Utilidades;
@@ -14,11 +15,20 @@ using Vista.Vacunas;
 namespace Vista.Dashboard
 {
     /// <summary>
-    /// Ventana principal. El menú lateral solo muestra los módulos a los que el rol del usuario tiene permiso.
+    /// Ventana principal. El menú lateral solo muestra los módulos a los que el rol del usuario tiene permiso
+    /// y se contrae automáticamente (solo iconos) cuando la ventana es angosta.
     /// </summary>
     public partial class frmDashboardPrincipal : Form
     {
-        private Form activeForm = null;
+        private const int AnchoMenu = 250;
+        private const int AnchoMenuCompacto = 72;
+        private const int UmbralCompacto = 1100;
+
+        private Control activeControl = null;
+        private BotonMenu[] _opciones;
+        private readonly ToolTip _tip = new ToolTip();
+        private bool _compacto;
+        private bool _ventanaPequena;
 
         /// <summary>True si el usuario cerró sesión (se vuelve al login); false si cerró la ventana (se sale).</summary>
         public bool CerrarSesion { get; private set; }
@@ -30,9 +40,15 @@ namespace Vista.Dashboard
 
         private void frmDashboardPrincipal_Load(object sender, EventArgs e)
         {
+            _opciones = new BotonMenu[]
+            {
+                btnInicio, btnPropietarios, btnMascotas, btnCitas, btnConsultas,
+                btnVacunas, btnUsuarios, btnRoles, btnBitacora, btnSalir
+            };
+
             lblUsuario.Text = Sesion.UsuarioActual.NombreCompleto + "\n" + Sesion.UsuarioActual.Rol;
-            lblBienvenida.Text = "Bienvenido(a), " + Sesion.UsuarioActual.NombreCompleto +
-                                 "\n\nSeleccione una opción del menú lateral.";
+            string fecha = DateTime.Now.ToString("dddd, d 'de' MMMM 'de' yyyy", new CultureInfo("es-ES"));
+            lblFecha.Text = char.ToUpper(fecha[0]) + fecha.Substring(1);
 
             // Cada opción del menú solo es visible si el rol tiene el permiso correspondiente
             btnPropietarios.Visible = Sesion.Tiene(Permisos.PropietariosVer);
@@ -43,36 +59,80 @@ namespace Vista.Dashboard
             btnUsuarios.Visible = Sesion.Tiene(Permisos.UsuariosGestionar);
             btnRoles.Visible = Sesion.Tiene(Permisos.RolesGestionar);
             btnBitacora.Visible = Sesion.Tiene(Permisos.BitacoraVer);
+
+            _ventanaPequena = ClientSize.Width < UmbralCompacto;
+            _compacto = _ventanaPequena;
+            AplicarMenu();
+
+            Abrir(new ucInicio(), btnInicio, "Inicio");
         }
 
-        private void AbrirForm(Form formularioAbrir)
+        // Diseño adaptable: contrae el menú cuando la ventana es angosta
+        private void frmDashboardPrincipal_Resize(object sender, EventArgs e)
         {
-            // Liberar el formulario anterior para no acumular memoria
-            if (activeForm != null)
+            if (_opciones == null) return;
+            bool pequena = ClientSize.Width < UmbralCompacto;
+            if (pequena == _ventanaPequena) return;
+            _ventanaPequena = pequena;
+            _compacto = pequena;
+            AplicarMenu();
+        }
+
+        private void AplicarMenu()
+        {
+            pnlMenu.Width = _compacto ? AnchoMenuCompacto : AnchoMenu;
+            lblApp.Text = _compacto ? "\U0001F43E" : "\U0001F43E  VetCare";
+            lblUsuario.Visible = !_compacto;
+            foreach (BotonMenu b in _opciones)
             {
-                activeForm.Close();
-                pnlContenedor.Controls.Remove(activeForm);
-                activeForm.Dispose();
+                b.Compacto = _compacto;
+                _tip.SetToolTip(b, _compacto ? b.Text : "");
+            }
+        }
+
+        private void btnToggle_Click(object sender, EventArgs e)
+        {
+            _compacto = !_compacto;
+            AplicarMenu();
+        }
+
+        /// <summary>Muestra un formulario o control dentro del panel de contenido y resalta su opción del menú.</summary>
+        private void Abrir(Control nuevo, BotonMenu boton, string titulo)
+        {
+            // Liberar el contenido anterior para no acumular memoria
+            if (activeControl != null)
+            {
+                pnlContenedor.Controls.Remove(activeControl);
+                activeControl.Dispose();
             }
 
-            activeForm = formularioAbrir;
-            formularioAbrir.TopLevel = false;
-            formularioAbrir.FormBorderStyle = FormBorderStyle.None;
-            formularioAbrir.Dock = DockStyle.Fill;
+            Form formulario = nuevo as Form;
+            if (formulario != null)
+            {
+                formulario.TopLevel = false;
+                formulario.FormBorderStyle = FormBorderStyle.None;
+            }
 
-            pnlContenedor.Controls.Add(formularioAbrir);
-            formularioAbrir.BringToFront();
-            formularioAbrir.Show();
+            activeControl = nuevo;
+            nuevo.Dock = DockStyle.Fill;
+            pnlContenedor.Controls.Add(nuevo);
+            nuevo.BringToFront();
+            nuevo.Show();
+
+            foreach (BotonMenu b in _opciones) b.Activo = false;
+            boton.Activo = true;
+            lblSeccion.Text = titulo;
         }
 
-        private void btnPropietarios_Click(object sender, EventArgs e) { AbrirForm(new frmPropietarios()); }
-        private void btnMascotas_Click(object sender, EventArgs e) { AbrirForm(new frmMascotas()); }
-        private void btnCitas_Click(object sender, EventArgs e) { AbrirForm(new frmCitas()); }
-        private void btnConsultas_Click(object sender, EventArgs e) { AbrirForm(new frmConsultas()); }
-        private void btnVacunas_Click(object sender, EventArgs e) { AbrirForm(new frmVacunas()); }
-        private void btnUsuarios_Click(object sender, EventArgs e) { AbrirForm(new frmUsuarios()); }
-        private void btnRoles_Click(object sender, EventArgs e) { AbrirForm(new frmRoles()); }
-        private void btnBitacora_Click(object sender, EventArgs e) { AbrirForm(new frmBitacora()); }
+        private void btnInicio_Click(object sender, EventArgs e) { Abrir(new ucInicio(), btnInicio, "Inicio"); }
+        private void btnPropietarios_Click(object sender, EventArgs e) { Abrir(new frmPropietarios(), btnPropietarios, "Propietarios"); }
+        private void btnMascotas_Click(object sender, EventArgs e) { Abrir(new frmMascotas(), btnMascotas, "Mascotas"); }
+        private void btnCitas_Click(object sender, EventArgs e) { Abrir(new frmCitas(), btnCitas, "Citas médicas"); }
+        private void btnConsultas_Click(object sender, EventArgs e) { Abrir(new frmConsultas(), btnConsultas, "Historial médico"); }
+        private void btnVacunas_Click(object sender, EventArgs e) { Abrir(new frmVacunas(), btnVacunas, "Vacunas"); }
+        private void btnUsuarios_Click(object sender, EventArgs e) { Abrir(new frmUsuarios(), btnUsuarios, "Usuarios"); }
+        private void btnRoles_Click(object sender, EventArgs e) { Abrir(new frmRoles(), btnRoles, "Roles y permisos"); }
+        private void btnBitacora_Click(object sender, EventArgs e) { Abrir(new frmBitacora(), btnBitacora, "Bitácora"); }
 
         private void btnSalir_Click(object sender, EventArgs e)
         {

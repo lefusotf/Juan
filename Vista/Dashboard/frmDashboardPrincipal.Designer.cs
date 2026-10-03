@@ -17,27 +17,92 @@ namespace Vista.Dashboard
 
         private void InitializeComponent()
         {
-            this.pnlMenu = new System.Windows.Forms.Panel();
-            this.lblApp = new System.Windows.Forms.Label();
-            this.lblUsuario = new System.Windows.Forms.Label();
-            this.btnSalir = new System.Windows.Forms.Button();
-            this.btnBitacora = new System.Windows.Forms.Button();
-            this.btnRoles = new System.Windows.Forms.Button();
-            this.btnUsuarios = new System.Windows.Forms.Button();
-            this.btnVacunas = new System.Windows.Forms.Button();
-            this.btnConsultas = new System.Windows.Forms.Button();
-            this.btnCitas = new System.Windows.Forms.Button();
-            this.btnMascotas = new System.Windows.Forms.Button();
-            this.btnPropietarios = new System.Windows.Forms.Button();
             this.pnlContenedor = new System.Windows.Forms.Panel();
-            this.lblBienvenida = new System.Windows.Forms.Label();
+            this.pnlTop = new System.Windows.Forms.Panel();
+            this.lblSeccion = new System.Windows.Forms.Label();
+            this.lblFecha = new System.Windows.Forms.Label();
+            this.btnToggle = new Vista.Comun.BotonMenu();
+            this.pnlLinea = new System.Windows.Forms.Panel();
+            this.pnlMenu = new System.Windows.Forms.Panel();
+            this.btnSalir = new Vista.Comun.BotonMenu();
+            this.btnBitacora = new Vista.Comun.BotonMenu();
+            this.btnRoles = new Vista.Comun.BotonMenu();
+            this.btnUsuarios = new Vista.Comun.BotonMenu();
+            this.btnVacunas = new Vista.Comun.BotonMenu();
+            this.btnConsultas = new Vista.Comun.BotonMenu();
+            this.btnCitas = new Vista.Comun.BotonMenu();
+            this.btnMascotas = new Vista.Comun.BotonMenu();
+            this.btnPropietarios = new Vista.Comun.BotonMenu();
+            this.btnInicio = new Vista.Comun.BotonMenu();
+            this.lblUsuario = new System.Windows.Forms.Label();
+            this.lblApp = new System.Windows.Forms.Label();
+            this.pnlTop.SuspendLayout();
             this.pnlMenu.SuspendLayout();
-            this.pnlContenedor.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // pnlContenedor
+            // 
+            this.pnlContenedor.BackColor = System.Drawing.Color.FromArgb(241, 245, 244);
+            this.pnlContenedor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlContenedor.Name = "pnlContenedor";
+            // 
+            // pnlTop
+            // 
+            this.pnlTop.BackColor = System.Drawing.Color.White;
+            this.pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlTop.Name = "pnlTop";
+            this.pnlTop.Size = new System.Drawing.Size(1030, 64);
+            this.pnlTop.Controls.Add(this.lblSeccion);
+            this.pnlTop.Controls.Add(this.lblFecha);
+            this.pnlTop.Controls.Add(this.btnToggle);
+            this.pnlTop.Controls.Add(this.pnlLinea);
+            // 
+            // lblSeccion
+            // 
+            this.lblSeccion.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblSeccion.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold);
+            this.lblSeccion.ForeColor = System.Drawing.Color.FromArgb(31, 41, 55);
+            this.lblSeccion.Name = "lblSeccion";
+            this.lblSeccion.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
+            this.lblSeccion.Text = "Inicio";
+            this.lblSeccion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblFecha
+            // 
+            this.lblFecha.Dock = System.Windows.Forms.DockStyle.Right;
+            this.lblFecha.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+            this.lblFecha.Name = "lblFecha";
+            this.lblFecha.Padding = new System.Windows.Forms.Padding(0, 0, 24, 0);
+            this.lblFecha.Size = new System.Drawing.Size(340, 64);
+            this.lblFecha.Text = "Fecha";
+            this.lblFecha.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // btnToggle
+            // 
+            this.btnToggle.Compacto = true;
+            this.btnToggle.ColorFondo = System.Drawing.Color.White;
+            this.btnToggle.ColorHover = System.Drawing.Color.FromArgb(241, 245, 244);
+            this.btnToggle.ColorTexto = System.Drawing.Color.FromArgb(31, 41, 55);
+            this.btnToggle.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnToggle.Icono = "\u2630";
+            this.btnToggle.Name = "btnToggle";
+            this.btnToggle.Size = new System.Drawing.Size(64, 64);
+            this.btnToggle.Text = "Menú";
+            this.btnToggle.Click += new System.EventHandler(this.btnToggle_Click);
+            // 
+            // pnlLinea
+            // 
+            this.pnlLinea.BackColor = System.Drawing.Color.FromArgb(226, 232, 240);
+            this.pnlLinea.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlLinea.Height = 1;
+            this.pnlLinea.Name = "pnlLinea";
             // 
             // pnlMenu
             // 
-            this.pnlMenu.BackColor = System.Drawing.Color.FromArgb(22, 90, 80);
+            this.pnlMenu.BackColor = System.Drawing.Color.FromArgb(15, 42, 46);
+            this.pnlMenu.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlMenu.Name = "pnlMenu";
+            this.pnlMenu.Size = new System.Drawing.Size(250, 760);
             this.pnlMenu.Controls.Add(this.btnSalir);
             this.pnlMenu.Controls.Add(this.btnBitacora);
             this.pnlMenu.Controls.Add(this.btnRoles);
@@ -47,254 +112,163 @@ namespace Vista.Dashboard
             this.pnlMenu.Controls.Add(this.btnCitas);
             this.pnlMenu.Controls.Add(this.btnMascotas);
             this.pnlMenu.Controls.Add(this.btnPropietarios);
+            this.pnlMenu.Controls.Add(this.btnInicio);
             this.pnlMenu.Controls.Add(this.lblUsuario);
             this.pnlMenu.Controls.Add(this.lblApp);
-            this.pnlMenu.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlMenu.Location = new System.Drawing.Point(0, 0);
-            this.pnlMenu.Name = "pnlMenu";
-            this.pnlMenu.Size = new System.Drawing.Size(230, 700);
-            this.pnlMenu.TabIndex = 0;
-            // 
-            // lblApp
-            // 
-            this.lblApp.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblApp.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.lblApp.ForeColor = System.Drawing.Color.White;
-            this.lblApp.Location = new System.Drawing.Point(0, 0);
-            this.lblApp.Name = "lblApp";
-            this.lblApp.Size = new System.Drawing.Size(230, 60);
-            this.lblApp.TabIndex = 0;
-            this.lblApp.Text = "Veterinaria";
-            this.lblApp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblUsuario
-            // 
-            this.lblUsuario.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblUsuario.ForeColor = System.Drawing.Color.FromArgb(200, 230, 225);
-            this.lblUsuario.Location = new System.Drawing.Point(0, 60);
-            this.lblUsuario.Name = "lblUsuario";
-            this.lblUsuario.Size = new System.Drawing.Size(230, 50);
-            this.lblUsuario.TabIndex = 1;
-            this.lblUsuario.Text = "Usuario";
-            this.lblUsuario.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnSalir
             // 
-            this.btnSalir.BackColor = System.Drawing.Color.FromArgb(192, 57, 43);
-            this.btnSalir.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSalir.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnSalir.FlatAppearance.BorderSize = 0;
-            this.btnSalir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSalir.ForeColor = System.Drawing.Color.White;
-            this.btnSalir.Location = new System.Drawing.Point(0, 110);
+            this.btnSalir.Icono = "\U0001F6AA";
             this.btnSalir.Name = "btnSalir";
-            this.btnSalir.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
-            this.btnSalir.Size = new System.Drawing.Size(230, 46);
-            this.btnSalir.TabIndex = 2;
+            this.btnSalir.Size = new System.Drawing.Size(250, 50);
             this.btnSalir.Text = "Cerrar sesión";
-            this.btnSalir.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSalir.UseVisualStyleBackColor = false;
+            this.btnSalir.ColorTexto = System.Drawing.Color.FromArgb(252, 165, 165);
+            this.btnSalir.ColorHover = System.Drawing.Color.FromArgb(127, 29, 29);
             this.btnSalir.Click += new System.EventHandler(this.btnSalir_Click);
             // 
             // btnBitacora
             // 
-            this.btnBitacora.BackColor = System.Drawing.Color.FromArgb(22, 90, 80);
-            this.btnBitacora.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnBitacora.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnBitacora.FlatAppearance.BorderSize = 0;
-            this.btnBitacora.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBitacora.ForeColor = System.Drawing.Color.White;
-            this.btnBitacora.Location = new System.Drawing.Point(0, 156);
+            this.btnBitacora.Icono = "\U0001F4CB";
             this.btnBitacora.Name = "btnBitacora";
-            this.btnBitacora.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
-            this.btnBitacora.Size = new System.Drawing.Size(230, 46);
-            this.btnBitacora.TabIndex = 3;
+            this.btnBitacora.Size = new System.Drawing.Size(250, 50);
             this.btnBitacora.Text = "Bitácora";
-            this.btnBitacora.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnBitacora.UseVisualStyleBackColor = false;
             this.btnBitacora.Click += new System.EventHandler(this.btnBitacora_Click);
             // 
             // btnRoles
             // 
-            this.btnRoles.BackColor = System.Drawing.Color.FromArgb(22, 90, 80);
-            this.btnRoles.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnRoles.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnRoles.FlatAppearance.BorderSize = 0;
-            this.btnRoles.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRoles.ForeColor = System.Drawing.Color.White;
-            this.btnRoles.Location = new System.Drawing.Point(0, 202);
+            this.btnRoles.Icono = "\U0001F510";
             this.btnRoles.Name = "btnRoles";
-            this.btnRoles.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
-            this.btnRoles.Size = new System.Drawing.Size(230, 46);
-            this.btnRoles.TabIndex = 4;
+            this.btnRoles.Size = new System.Drawing.Size(250, 50);
             this.btnRoles.Text = "Roles y permisos";
-            this.btnRoles.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRoles.UseVisualStyleBackColor = false;
             this.btnRoles.Click += new System.EventHandler(this.btnRoles_Click);
             // 
             // btnUsuarios
             // 
-            this.btnUsuarios.BackColor = System.Drawing.Color.FromArgb(22, 90, 80);
-            this.btnUsuarios.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnUsuarios.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnUsuarios.FlatAppearance.BorderSize = 0;
-            this.btnUsuarios.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnUsuarios.ForeColor = System.Drawing.Color.White;
-            this.btnUsuarios.Location = new System.Drawing.Point(0, 248);
+            this.btnUsuarios.Icono = "\U0001F465";
             this.btnUsuarios.Name = "btnUsuarios";
-            this.btnUsuarios.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
-            this.btnUsuarios.Size = new System.Drawing.Size(230, 46);
-            this.btnUsuarios.TabIndex = 5;
+            this.btnUsuarios.Size = new System.Drawing.Size(250, 50);
             this.btnUsuarios.Text = "Usuarios";
-            this.btnUsuarios.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnUsuarios.UseVisualStyleBackColor = false;
             this.btnUsuarios.Click += new System.EventHandler(this.btnUsuarios_Click);
             // 
             // btnVacunas
             // 
-            this.btnVacunas.BackColor = System.Drawing.Color.FromArgb(22, 90, 80);
-            this.btnVacunas.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnVacunas.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnVacunas.FlatAppearance.BorderSize = 0;
-            this.btnVacunas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnVacunas.ForeColor = System.Drawing.Color.White;
-            this.btnVacunas.Location = new System.Drawing.Point(0, 294);
+            this.btnVacunas.Icono = "\U0001F489";
             this.btnVacunas.Name = "btnVacunas";
-            this.btnVacunas.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
-            this.btnVacunas.Size = new System.Drawing.Size(230, 46);
-            this.btnVacunas.TabIndex = 6;
+            this.btnVacunas.Size = new System.Drawing.Size(250, 50);
             this.btnVacunas.Text = "Vacunas";
-            this.btnVacunas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnVacunas.UseVisualStyleBackColor = false;
             this.btnVacunas.Click += new System.EventHandler(this.btnVacunas_Click);
             // 
             // btnConsultas
             // 
-            this.btnConsultas.BackColor = System.Drawing.Color.FromArgb(22, 90, 80);
-            this.btnConsultas.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnConsultas.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnConsultas.FlatAppearance.BorderSize = 0;
-            this.btnConsultas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnConsultas.ForeColor = System.Drawing.Color.White;
-            this.btnConsultas.Location = new System.Drawing.Point(0, 340);
+            this.btnConsultas.Icono = "\U0001FA7A";
             this.btnConsultas.Name = "btnConsultas";
-            this.btnConsultas.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
-            this.btnConsultas.Size = new System.Drawing.Size(230, 46);
-            this.btnConsultas.TabIndex = 7;
+            this.btnConsultas.Size = new System.Drawing.Size(250, 50);
             this.btnConsultas.Text = "Consultas médicas";
-            this.btnConsultas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnConsultas.UseVisualStyleBackColor = false;
             this.btnConsultas.Click += new System.EventHandler(this.btnConsultas_Click);
             // 
             // btnCitas
             // 
-            this.btnCitas.BackColor = System.Drawing.Color.FromArgb(22, 90, 80);
-            this.btnCitas.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCitas.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnCitas.FlatAppearance.BorderSize = 0;
-            this.btnCitas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCitas.ForeColor = System.Drawing.Color.White;
-            this.btnCitas.Location = new System.Drawing.Point(0, 386);
+            this.btnCitas.Icono = "\U0001F4C5";
             this.btnCitas.Name = "btnCitas";
-            this.btnCitas.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
-            this.btnCitas.Size = new System.Drawing.Size(230, 46);
-            this.btnCitas.TabIndex = 8;
+            this.btnCitas.Size = new System.Drawing.Size(250, 50);
             this.btnCitas.Text = "Citas";
-            this.btnCitas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCitas.UseVisualStyleBackColor = false;
             this.btnCitas.Click += new System.EventHandler(this.btnCitas_Click);
             // 
             // btnMascotas
             // 
-            this.btnMascotas.BackColor = System.Drawing.Color.FromArgb(22, 90, 80);
-            this.btnMascotas.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnMascotas.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnMascotas.FlatAppearance.BorderSize = 0;
-            this.btnMascotas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMascotas.ForeColor = System.Drawing.Color.White;
-            this.btnMascotas.Location = new System.Drawing.Point(0, 432);
+            this.btnMascotas.Icono = "\U0001F43E";
             this.btnMascotas.Name = "btnMascotas";
-            this.btnMascotas.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
-            this.btnMascotas.Size = new System.Drawing.Size(230, 46);
-            this.btnMascotas.TabIndex = 9;
+            this.btnMascotas.Size = new System.Drawing.Size(250, 50);
             this.btnMascotas.Text = "Mascotas";
-            this.btnMascotas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnMascotas.UseVisualStyleBackColor = false;
             this.btnMascotas.Click += new System.EventHandler(this.btnMascotas_Click);
             // 
             // btnPropietarios
             // 
-            this.btnPropietarios.BackColor = System.Drawing.Color.FromArgb(22, 90, 80);
-            this.btnPropietarios.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnPropietarios.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnPropietarios.FlatAppearance.BorderSize = 0;
-            this.btnPropietarios.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPropietarios.ForeColor = System.Drawing.Color.White;
-            this.btnPropietarios.Location = new System.Drawing.Point(0, 478);
+            this.btnPropietarios.Icono = "\U0001F464";
             this.btnPropietarios.Name = "btnPropietarios";
-            this.btnPropietarios.Padding = new System.Windows.Forms.Padding(16, 0, 0, 0);
-            this.btnPropietarios.Size = new System.Drawing.Size(230, 46);
-            this.btnPropietarios.TabIndex = 10;
+            this.btnPropietarios.Size = new System.Drawing.Size(250, 50);
             this.btnPropietarios.Text = "Propietarios";
-            this.btnPropietarios.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnPropietarios.UseVisualStyleBackColor = false;
             this.btnPropietarios.Click += new System.EventHandler(this.btnPropietarios_Click);
             // 
-            // pnlContenedor
+            // btnInicio
             // 
-            this.pnlContenedor.BackColor = System.Drawing.Color.FromArgb(244, 247, 246);
-            this.pnlContenedor.Controls.Add(this.lblBienvenida);
-            this.pnlContenedor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlContenedor.Location = new System.Drawing.Point(230, 0);
-            this.pnlContenedor.Name = "pnlContenedor";
-            this.pnlContenedor.Size = new System.Drawing.Size(770, 700);
-            this.pnlContenedor.TabIndex = 1;
+            this.btnInicio.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnInicio.Icono = "\U0001F3E0";
+            this.btnInicio.Name = "btnInicio";
+            this.btnInicio.Size = new System.Drawing.Size(250, 50);
+            this.btnInicio.Text = "Inicio";
+            this.btnInicio.Click += new System.EventHandler(this.btnInicio_Click);
             // 
-            // lblBienvenida
+            // lblUsuario
             // 
-            this.lblBienvenida.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblBienvenida.Font = new System.Drawing.Font("Segoe UI", 16F);
-            this.lblBienvenida.ForeColor = System.Drawing.Color.FromArgb(22, 90, 80);
-            this.lblBienvenida.Location = new System.Drawing.Point(0, 0);
-            this.lblBienvenida.Name = "lblBienvenida";
-            this.lblBienvenida.Size = new System.Drawing.Size(770, 700);
-            this.lblBienvenida.TabIndex = 0;
-            this.lblBienvenida.Text = "Bienvenido(a)";
-            this.lblBienvenida.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblUsuario.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblUsuario.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.lblUsuario.ForeColor = System.Drawing.Color.FromArgb(153, 246, 228);
+            this.lblUsuario.Height = 64;
+            this.lblUsuario.Name = "lblUsuario";
+            this.lblUsuario.Text = "Usuario";
+            this.lblUsuario.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblApp
+            // 
+            this.lblApp.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblApp.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
+            this.lblApp.ForeColor = System.Drawing.Color.White;
+            this.lblApp.Height = 84;
+            this.lblApp.Name = "lblApp";
+            this.lblApp.Text = "\U0001F43E  VetCare";
+            this.lblApp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // frmDashboardPrincipal
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1000, 700);
-            this.Controls.Add(this.pnlContenedor);
-            this.Controls.Add(this.pnlMenu);
+            this.ClientSize = new System.Drawing.Size(1280, 760);
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.MinimumSize = new System.Drawing.Size(1016, 739);
+            this.MinimumSize = new System.Drawing.Size(780, 560);
             this.Name = "frmDashboardPrincipal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Sistema de Gestión Veterinaria";
+            this.Text = "VetCare - Sistema de Gestión Veterinaria";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.frmDashboardPrincipal.Controls.Add(this.pnlContenedor);
+            this.frmDashboardPrincipal.Controls.Add(this.pnlTop);
+            this.frmDashboardPrincipal.Controls.Add(this.pnlMenu);
             this.Load += new System.EventHandler(this.frmDashboardPrincipal_Load);
+            this.Resize += new System.EventHandler(this.frmDashboardPrincipal_Resize);
             this.pnlMenu.ResumeLayout(false);
-            this.pnlContenedor.ResumeLayout(false);
+            this.pnlTop.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
         }
 
         #endregion
 
-        private System.Windows.Forms.Panel pnlMenu;
-        private System.Windows.Forms.Label lblApp;
-        private System.Windows.Forms.Label lblUsuario;
-        private System.Windows.Forms.Button btnSalir;
-        private System.Windows.Forms.Button btnBitacora;
-        private System.Windows.Forms.Button btnRoles;
-        private System.Windows.Forms.Button btnUsuarios;
-        private System.Windows.Forms.Button btnVacunas;
-        private System.Windows.Forms.Button btnConsultas;
-        private System.Windows.Forms.Button btnCitas;
-        private System.Windows.Forms.Button btnMascotas;
-        private System.Windows.Forms.Button btnPropietarios;
         private System.Windows.Forms.Panel pnlContenedor;
-        private System.Windows.Forms.Label lblBienvenida;
+        private System.Windows.Forms.Panel pnlTop;
+        private System.Windows.Forms.Label lblSeccion;
+        private System.Windows.Forms.Label lblFecha;
+        private Vista.Comun.BotonMenu btnToggle;
+        private System.Windows.Forms.Panel pnlLinea;
+        private System.Windows.Forms.Panel pnlMenu;
+        private Vista.Comun.BotonMenu btnSalir;
+        private Vista.Comun.BotonMenu btnBitacora;
+        private Vista.Comun.BotonMenu btnRoles;
+        private Vista.Comun.BotonMenu btnUsuarios;
+        private Vista.Comun.BotonMenu btnVacunas;
+        private Vista.Comun.BotonMenu btnConsultas;
+        private Vista.Comun.BotonMenu btnCitas;
+        private Vista.Comun.BotonMenu btnMascotas;
+        private Vista.Comun.BotonMenu btnPropietarios;
+        private Vista.Comun.BotonMenu btnInicio;
+        private System.Windows.Forms.Label lblUsuario;
+        private System.Windows.Forms.Label lblApp;
     }
 }

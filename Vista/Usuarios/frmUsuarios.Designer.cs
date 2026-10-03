@@ -2,9 +2,6 @@ namespace Vista.Usuarios
 {
     partial class frmUsuarios
     {
-        /// <summary>
-        /// Variable del diseñador necesaria.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         protected override void Dispose(bool disposing)
@@ -20,14 +17,16 @@ namespace Vista.Usuarios
 
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle estiloEncabezado = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle estiloAlterno = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle estiloCelda = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle estiloEnc0 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle estiloAlt0 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle estiloCelda0 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.tlpRaiz = new System.Windows.Forms.TableLayoutPanel();
             this.lblTitulo = new System.Windows.Forms.Label();
-            this.lblBuscar = new System.Windows.Forms.Label();
+            this.flpBusqueda = new System.Windows.Forms.FlowLayoutPanel();
             this.txtBuscar = new System.Windows.Forms.TextBox();
-            this.btnBuscar = new System.Windows.Forms.Button();
-            this.gbDatos = new System.Windows.Forms.GroupBox();
+            this.btnBuscar = new Vista.Comun.BotonModerno();
+            this.pnlDatos = new Vista.Comun.PanelTarjeta();
+            this.tlpCampos = new System.Windows.Forms.TableLayoutPanel();
             this.lblNombre = new System.Windows.Forms.Label();
             this.txtNombre = new System.Windows.Forms.TextBox();
             this.lblUsuario = new System.Windows.Forms.Label();
@@ -40,298 +39,361 @@ namespace Vista.Usuarios
             this.cboRol = new System.Windows.Forms.ComboBox();
             this.lblEstado = new System.Windows.Forms.Label();
             this.cboEstado = new System.Windows.Forms.ComboBox();
-            this.btnNuevo = new System.Windows.Forms.Button();
-            this.btnGuardar = new System.Windows.Forms.Button();
-            this.btnEliminar = new System.Windows.Forms.Button();
+            this.lblSeccion = new System.Windows.Forms.Label();
+            this.flpBotones = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnNuevo = new Vista.Comun.BotonModerno();
+            this.btnGuardar = new Vista.Comun.BotonModerno();
+            this.btnEliminar = new Vista.Comun.BotonModerno();
+            this.pnlTabla = new Vista.Comun.PanelTarjeta();
             this.dgv = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
-            this.gbDatos.SuspendLayout();
+            this.tlpRaiz.SuspendLayout();
+            this.flpBusqueda.SuspendLayout();
+            this.pnlDatos.SuspendLayout();
+            this.tlpCampos.SuspendLayout();
+            this.flpBotones.SuspendLayout();
+            this.pnlTabla.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // tlpRaiz
+            // 
+            this.tlpRaiz.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpRaiz.Name = "tlpRaiz";
+            this.tlpRaiz.Padding = new System.Windows.Forms.Padding(28, 24, 28, 20);
+            this.tlpRaiz.ColumnCount = 1;
+            this.tlpRaiz.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpRaiz.RowCount = 5;
+            this.tlpRaiz.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
+            this.tlpRaiz.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
+            this.tlpRaiz.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
+            this.tlpRaiz.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
+            this.tlpRaiz.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpRaiz.Controls.Add(this.lblTitulo, 0, 0);
+            this.tlpRaiz.Controls.Add(this.flpBusqueda, 0, 1);
+            this.tlpRaiz.Controls.Add(this.pnlDatos, 0, 2);
+            this.tlpRaiz.Controls.Add(this.flpBotones, 0, 3);
+            this.tlpRaiz.Controls.Add(this.pnlTabla, 0, 4);
             // 
             // lblTitulo
             // 
             this.lblTitulo.AutoSize = true;
-            this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.lblTitulo.ForeColor = System.Drawing.Color.FromArgb(22, 90, 80);
-            this.lblTitulo.Location = new System.Drawing.Point(14, 10);
+            this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Bold);
+            this.lblTitulo.ForeColor = System.Drawing.Color.FromArgb(17, 94, 89);
+            this.lblTitulo.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(150, 30);
-            this.lblTitulo.TabIndex = 0;
             this.lblTitulo.Text = "Gestión de usuarios";
             // 
-            // lblBuscar
+            // flpBusqueda
             // 
-            this.lblBuscar.AutoSize = true;
-            this.lblBuscar.Location = new System.Drawing.Point(16, 59);
-            this.lblBuscar.Name = "lblBuscar";
-            this.lblBuscar.Size = new System.Drawing.Size(55, 19);
-            this.lblBuscar.TabIndex = 1;
-            this.lblBuscar.Text = "Buscar:";
+            this.flpBusqueda.AutoSize = true;
+            this.flpBusqueda.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flpBusqueda.Margin = new System.Windows.Forms.Padding(0, 10, 0, 14);
+            this.flpBusqueda.Name = "flpBusqueda";
+            this.flpBusqueda.Controls.Add(this.txtBuscar);
+            this.flpBusqueda.Controls.Add(this.btnBuscar);
             // 
             // txtBuscar
             // 
-            this.txtBuscar.Location = new System.Drawing.Point(80, 56);
+            this.txtBuscar.Margin = new System.Windows.Forms.Padding(0, 4, 10, 0);
             this.txtBuscar.Name = "txtBuscar";
-            this.txtBuscar.Size = new System.Drawing.Size(280, 25);
-            this.txtBuscar.TabIndex = 2;
+            this.txtBuscar.Size = new System.Drawing.Size(320, 27);
             this.txtBuscar.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtBuscar_KeyDown);
             // 
             // btnBuscar
             // 
-            this.btnBuscar.BackColor = System.Drawing.Color.FromArgb(108, 117, 125);
-            this.btnBuscar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnBuscar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBuscar.FlatAppearance.BorderSize = 0;
+            this.btnBuscar.BackColor = System.Drawing.Color.FromArgb(100, 116, 139);
             this.btnBuscar.ForeColor = System.Drawing.Color.White;
-            this.btnBuscar.Location = new System.Drawing.Point(370, 54);
+            this.btnBuscar.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnBuscar.Name = "btnBuscar";
-            this.btnBuscar.Size = new System.Drawing.Size(80, 30);
-            this.btnBuscar.TabIndex = 3;
+            this.btnBuscar.Size = new System.Drawing.Size(110, 34);
             this.btnBuscar.Text = "Buscar";
             this.btnBuscar.UseVisualStyleBackColor = false;
+            this.btnBuscar.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this.btnBuscar.Click += new System.EventHandler(this.btnBuscar_Click);
             // 
-            // gbDatos
+            // pnlDatos
             // 
-            this.gbDatos.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-            this.gbDatos.Location = new System.Drawing.Point(16, 90);
-            this.gbDatos.Name = "gbDatos";
-            this.gbDatos.Size = new System.Drawing.Size(960, 140);
-            this.gbDatos.TabIndex = 4;
-            this.gbDatos.TabStop = false;
-            this.gbDatos.Text = "Datos";
-                        this.gbDatos.Controls.Add(this.lblNombre);
-                        this.gbDatos.Controls.Add(this.txtNombre);
-                        this.gbDatos.Controls.Add(this.lblUsuario);
-                        this.gbDatos.Controls.Add(this.txtUsuario);
-                        this.gbDatos.Controls.Add(this.lblContrasena);
-                        this.gbDatos.Controls.Add(this.txtContrasena);
-                        this.gbDatos.Controls.Add(this.lblCorreo);
-                        this.gbDatos.Controls.Add(this.txtCorreo);
-                        this.gbDatos.Controls.Add(this.lblRol);
-                        this.gbDatos.Controls.Add(this.cboRol);
-                        this.gbDatos.Controls.Add(this.lblEstado);
-                        this.gbDatos.Controls.Add(this.cboEstado);
+            this.pnlDatos.AutoSize = true;
+            this.pnlDatos.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.pnlDatos.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlDatos.Margin = new System.Windows.Forms.Padding(0, 0, 0, 14);
+            this.pnlDatos.Name = "pnlDatos";
+            this.pnlDatos.Padding = new System.Windows.Forms.Padding(22, 18, 22, 14);
+            this.pnlDatos.Controls.Add(this.tlpCampos);
+            this.pnlDatos.Controls.Add(this.lblSeccion);
+            // 
+            // tlpCampos
+            // 
+            this.tlpCampos.AutoSize = true;
+            this.tlpCampos.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tlpCampos.Name = "tlpCampos";
+            this.tlpCampos.ColumnCount = 4;
+            this.tlpCampos.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize));
+            this.tlpCampos.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpCampos.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.AutoSize));
+            this.tlpCampos.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpCampos.RowCount = 3;
+            this.tlpCampos.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
+            this.tlpCampos.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
+            this.tlpCampos.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
+            this.tlpCampos.Controls.Add(this.lblNombre, 0, 0);
+            this.tlpCampos.Controls.Add(this.txtNombre, 1, 0);
+            this.tlpCampos.Controls.Add(this.lblUsuario, 2, 0);
+            this.tlpCampos.Controls.Add(this.txtUsuario, 3, 0);
+            this.tlpCampos.Controls.Add(this.lblContrasena, 0, 1);
+            this.tlpCampos.Controls.Add(this.txtContrasena, 1, 1);
+            this.tlpCampos.Controls.Add(this.lblCorreo, 2, 1);
+            this.tlpCampos.Controls.Add(this.txtCorreo, 3, 1);
+            this.tlpCampos.Controls.Add(this.lblRol, 0, 2);
+            this.tlpCampos.Controls.Add(this.cboRol, 1, 2);
+            this.tlpCampos.Controls.Add(this.lblEstado, 2, 2);
+            this.tlpCampos.Controls.Add(this.cboEstado, 3, 2);
             // 
             // lblNombre
             // 
             this.lblNombre.AutoSize = true;
-            this.lblNombre.Location = new System.Drawing.Point(15, 31);
+            this.lblNombre.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblNombre.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+            this.lblNombre.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+            this.lblNombre.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
             this.lblNombre.Name = "lblNombre";
-            this.lblNombre.Size = new System.Drawing.Size(60, 19);
-            this.lblNombre.TabIndex = 5;
             this.lblNombre.Text = "Nombre completo *";
             // 
             // txtNombre
             // 
-            this.txtNombre.Location = new System.Drawing.Point(140, 28);
+            this.txtNombre.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtNombre.Margin = new System.Windows.Forms.Padding(3, 6, 16, 6);
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.MaxLength = 150;
-            this.txtNombre.Size = new System.Drawing.Size(320, 26);
-            this.txtNombre.TabIndex = 6;
             // 
             // lblUsuario
             // 
             this.lblUsuario.AutoSize = true;
-            this.lblUsuario.Location = new System.Drawing.Point(490, 31);
+            this.lblUsuario.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblUsuario.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+            this.lblUsuario.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+            this.lblUsuario.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
             this.lblUsuario.Name = "lblUsuario";
-            this.lblUsuario.Size = new System.Drawing.Size(60, 19);
-            this.lblUsuario.TabIndex = 7;
             this.lblUsuario.Text = "Usuario *";
             // 
             // txtUsuario
             // 
-            this.txtUsuario.Location = new System.Drawing.Point(615, 28);
+            this.txtUsuario.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtUsuario.Margin = new System.Windows.Forms.Padding(3, 6, 16, 6);
             this.txtUsuario.Name = "txtUsuario";
             this.txtUsuario.MaxLength = 30;
-            this.txtUsuario.Size = new System.Drawing.Size(320, 26);
-            this.txtUsuario.TabIndex = 8;
             // 
             // lblContrasena
             // 
             this.lblContrasena.AutoSize = true;
-            this.lblContrasena.Location = new System.Drawing.Point(15, 65);
+            this.lblContrasena.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblContrasena.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+            this.lblContrasena.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+            this.lblContrasena.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
             this.lblContrasena.Name = "lblContrasena";
-            this.lblContrasena.Size = new System.Drawing.Size(60, 19);
-            this.lblContrasena.TabIndex = 9;
             this.lblContrasena.Text = "Contraseña *";
             // 
             // txtContrasena
             // 
-            this.txtContrasena.Location = new System.Drawing.Point(140, 62);
+            this.txtContrasena.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtContrasena.Margin = new System.Windows.Forms.Padding(3, 6, 16, 6);
             this.txtContrasena.Name = "txtContrasena";
             this.txtContrasena.MaxLength = 100;
             this.txtContrasena.UseSystemPasswordChar = true;
-            this.txtContrasena.Size = new System.Drawing.Size(320, 26);
-            this.txtContrasena.TabIndex = 10;
             // 
             // lblCorreo
             // 
             this.lblCorreo.AutoSize = true;
-            this.lblCorreo.Location = new System.Drawing.Point(490, 65);
+            this.lblCorreo.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblCorreo.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+            this.lblCorreo.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+            this.lblCorreo.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
             this.lblCorreo.Name = "lblCorreo";
-            this.lblCorreo.Size = new System.Drawing.Size(60, 19);
-            this.lblCorreo.TabIndex = 11;
             this.lblCorreo.Text = "Correo";
             // 
             // txtCorreo
             // 
-            this.txtCorreo.Location = new System.Drawing.Point(615, 62);
+            this.txtCorreo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtCorreo.Margin = new System.Windows.Forms.Padding(3, 6, 16, 6);
             this.txtCorreo.Name = "txtCorreo";
             this.txtCorreo.MaxLength = 150;
-            this.txtCorreo.Size = new System.Drawing.Size(320, 26);
-            this.txtCorreo.TabIndex = 12;
             // 
             // lblRol
             // 
             this.lblRol.AutoSize = true;
-            this.lblRol.Location = new System.Drawing.Point(15, 99);
+            this.lblRol.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblRol.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+            this.lblRol.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+            this.lblRol.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
             this.lblRol.Name = "lblRol";
-            this.lblRol.Size = new System.Drawing.Size(60, 19);
-            this.lblRol.TabIndex = 13;
             this.lblRol.Text = "Rol *";
             // 
             // cboRol
             // 
-            this.cboRol.Location = new System.Drawing.Point(140, 96);
+            this.cboRol.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cboRol.Margin = new System.Windows.Forms.Padding(3, 6, 16, 6);
             this.cboRol.Name = "cboRol";
             this.cboRol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboRol.FormattingEnabled = true;
-            this.cboRol.Size = new System.Drawing.Size(320, 25);
-            this.cboRol.TabIndex = 14;
             // 
             // lblEstado
             // 
             this.lblEstado.AutoSize = true;
-            this.lblEstado.Location = new System.Drawing.Point(490, 99);
+            this.lblEstado.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblEstado.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+            this.lblEstado.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+            this.lblEstado.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
             this.lblEstado.Name = "lblEstado";
-            this.lblEstado.Size = new System.Drawing.Size(60, 19);
-            this.lblEstado.TabIndex = 15;
             this.lblEstado.Text = "Estado";
             // 
             // cboEstado
             // 
-            this.cboEstado.Location = new System.Drawing.Point(615, 96);
+            this.cboEstado.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cboEstado.Margin = new System.Windows.Forms.Padding(3, 6, 16, 6);
             this.cboEstado.Name = "cboEstado";
             this.cboEstado.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboEstado.FormattingEnabled = true;
             this.cboEstado.Items.AddRange(new object[] {"Activo", "Inactivo"});
-            this.cboEstado.Size = new System.Drawing.Size(320, 25);
-            this.cboEstado.TabIndex = 16;
+            // 
+            // lblSeccion
+            // 
+            this.lblSeccion.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblSeccion.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblSeccion.ForeColor = System.Drawing.Color.FromArgb(31, 41, 55);
+            this.lblSeccion.Height = 34;
+            this.lblSeccion.Name = "lblSeccion";
+            this.lblSeccion.Text = "Datos del registro";
+            this.lblSeccion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // flpBotones
+            // 
+            this.flpBotones.AutoSize = true;
+            this.flpBotones.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flpBotones.Margin = new System.Windows.Forms.Padding(0, 0, 0, 14);
+            this.flpBotones.Name = "flpBotones";
+            this.flpBotones.Controls.Add(this.btnNuevo);
+            this.flpBotones.Controls.Add(this.btnGuardar);
+            this.flpBotones.Controls.Add(this.btnEliminar);
             // 
             // btnNuevo
             // 
-            this.btnNuevo.BackColor = System.Drawing.Color.FromArgb(108, 117, 125);
-            this.btnNuevo.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnNuevo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNuevo.FlatAppearance.BorderSize = 0;
-            this.btnNuevo.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.btnNuevo.BackColor = System.Drawing.Color.FromArgb(100, 116, 139);
             this.btnNuevo.ForeColor = System.Drawing.Color.White;
-            this.btnNuevo.Location = new System.Drawing.Point(16, 240);
+            this.btnNuevo.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnNuevo.Name = "btnNuevo";
-            this.btnNuevo.Size = new System.Drawing.Size(110, 36);
-            this.btnNuevo.TabIndex = 17;
+            this.btnNuevo.Size = new System.Drawing.Size(130, 42);
             this.btnNuevo.Text = "Nuevo";
             this.btnNuevo.UseVisualStyleBackColor = false;
+            this.btnNuevo.Margin = new System.Windows.Forms.Padding(0, 0, 12, 0);
             this.btnNuevo.Click += new System.EventHandler(this.btnNuevo_Click);
             // 
             // btnGuardar
             // 
-            this.btnGuardar.BackColor = System.Drawing.Color.FromArgb(31, 122, 109);
-            this.btnGuardar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnGuardar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnGuardar.FlatAppearance.BorderSize = 0;
-            this.btnGuardar.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.btnGuardar.BackColor = System.Drawing.Color.FromArgb(15, 118, 110);
             this.btnGuardar.ForeColor = System.Drawing.Color.White;
-            this.btnGuardar.Location = new System.Drawing.Point(134, 240);
+            this.btnGuardar.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnGuardar.Name = "btnGuardar";
-            this.btnGuardar.Size = new System.Drawing.Size(110, 36);
-            this.btnGuardar.TabIndex = 18;
+            this.btnGuardar.Size = new System.Drawing.Size(130, 42);
             this.btnGuardar.Text = "Guardar";
             this.btnGuardar.UseVisualStyleBackColor = false;
+            this.btnGuardar.Margin = new System.Windows.Forms.Padding(0, 0, 12, 0);
             this.btnGuardar.Click += new System.EventHandler(this.btnGuardar_Click);
             // 
             // btnEliminar
             // 
-            this.btnEliminar.BackColor = System.Drawing.Color.FromArgb(192, 57, 43);
-            this.btnEliminar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnEliminar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnEliminar.FlatAppearance.BorderSize = 0;
-            this.btnEliminar.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.btnEliminar.BackColor = System.Drawing.Color.FromArgb(220, 38, 38);
             this.btnEliminar.ForeColor = System.Drawing.Color.White;
-            this.btnEliminar.Location = new System.Drawing.Point(252, 240);
+            this.btnEliminar.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnEliminar.Name = "btnEliminar";
-            this.btnEliminar.Size = new System.Drawing.Size(110, 36);
-            this.btnEliminar.TabIndex = 19;
+            this.btnEliminar.Size = new System.Drawing.Size(130, 42);
             this.btnEliminar.Text = "Eliminar";
             this.btnEliminar.UseVisualStyleBackColor = false;
+            this.btnEliminar.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this.btnEliminar.Click += new System.EventHandler(this.btnEliminar_Click);
+            // 
+            // pnlTabla
+            // 
+            this.pnlTabla.Name = "pnlTabla";
+            this.pnlTabla.Padding = new System.Windows.Forms.Padding(10, 10, 10, 10);
+            this.pnlTabla.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlTabla.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
+            this.pnlTabla.Controls.Add(this.dgv);
             // 
             // dgv
             // 
+            this.dgv.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgv.Name = "dgv";
+            estiloEnc0.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            estiloEnc0.BackColor = System.Drawing.Color.FromArgb(241, 245, 244);
+            estiloEnc0.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+            estiloEnc0.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+            estiloEnc0.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            estiloEnc0.SelectionBackColor = System.Drawing.Color.FromArgb(241, 245, 244);
+            estiloEnc0.SelectionForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+            estiloCelda0.BackColor = System.Drawing.Color.White;
+            estiloCelda0.ForeColor = System.Drawing.Color.FromArgb(31, 41, 55);
+            estiloCelda0.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            estiloCelda0.SelectionBackColor = System.Drawing.Color.FromArgb(204, 251, 241);
+            estiloCelda0.SelectionForeColor = System.Drawing.Color.FromArgb(17, 24, 39);
+            estiloAlt0.BackColor = System.Drawing.Color.FromArgb(249, 251, 251);
             this.dgv.AllowUserToAddRows = false;
             this.dgv.AllowUserToDeleteRows = false;
             this.dgv.AllowUserToResizeRows = false;
-            this.dgv.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgv.AlternatingRowsDefaultCellStyle = estiloAlt0;
             this.dgv.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv.BackgroundColor = System.Drawing.Color.White;
             this.dgv.BorderStyle = System.Windows.Forms.BorderStyle.None;
-                        estiloEncabezado.BackColor = System.Drawing.Color.FromArgb(31, 122, 109);
-                        estiloEncabezado.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-                        estiloEncabezado.ForeColor = System.Drawing.Color.White;
-                        estiloEncabezado.SelectionBackColor = System.Drawing.Color.FromArgb(31, 122, 109);
-                        estiloEncabezado.SelectionForeColor = System.Drawing.Color.White;
-            this.dgv.ColumnHeadersDefaultCellStyle = estiloEncabezado;
-            this.dgv.ColumnHeadersHeight = 34;
+            this.dgv.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+            this.dgv.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.dgv.ColumnHeadersDefaultCellStyle = estiloEnc0;
+            this.dgv.ColumnHeadersHeight = 42;
             this.dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-                        estiloCelda.SelectionBackColor = System.Drawing.Color.FromArgb(200, 230, 225);
-                        estiloCelda.SelectionForeColor = System.Drawing.Color.Black;
-            this.dgv.DefaultCellStyle = estiloCelda;
-                        estiloAlterno.BackColor = System.Drawing.Color.FromArgb(247, 250, 249);
-            this.dgv.AlternatingRowsDefaultCellStyle = estiloAlterno;
+            this.dgv.DefaultCellStyle = estiloCelda0;
             this.dgv.EnableHeadersVisualStyles = false;
-            this.dgv.Location = new System.Drawing.Point(16, 288);
+            this.dgv.GridColor = System.Drawing.Color.FromArgb(226, 232, 240);
             this.dgv.MultiSelect = false;
-            this.dgv.Name = "dgv";
             this.dgv.ReadOnly = true;
             this.dgv.RowHeadersVisible = false;
+            this.dgv.RowTemplate.Height = 38;
             this.dgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv.Size = new System.Drawing.Size(960, 336);
-            this.dgv.TabIndex = 20;
             this.dgv.SelectionChanged += new System.EventHandler(this.dgv_SelectionChanged);
             // 
             // frmUsuarios
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackColor = System.Drawing.Color.FromArgb(244, 247, 246);
-            this.ClientSize = new System.Drawing.Size(992, 640);
+            this.BackColor = System.Drawing.Color.FromArgb(241, 245, 244);
+            this.ClientSize = new System.Drawing.Size(1000, 680);
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.Controls.Add(this.lblTitulo);
-            this.Controls.Add(this.lblBuscar);
-            this.Controls.Add(this.txtBuscar);
-            this.Controls.Add(this.btnBuscar);
-            this.Controls.Add(this.gbDatos);
-            this.Controls.Add(this.btnNuevo);
-            this.Controls.Add(this.btnGuardar);
-            this.Controls.Add(this.btnEliminar);
-            this.Controls.Add(this.dgv);
             this.Name = "frmUsuarios";
             this.Text = "Gestión de usuarios";
+            this.frmUsuarios.Controls.Add(this.tlpRaiz);
             this.Load += new System.EventHandler(this.frmUsuarios_Load);
+            this.Resize += new System.EventHandler(this.frmUsuarios_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
-            this.gbDatos.ResumeLayout(false);
-            this.gbDatos.PerformLayout();
+            this.pnlTabla.ResumeLayout(false);
+            this.flpBotones.ResumeLayout(false);
+            this.flpBotones.PerformLayout();
+            this.tlpCampos.ResumeLayout(false);
+            this.tlpCampos.PerformLayout();
+            this.pnlDatos.ResumeLayout(false);
+            this.pnlDatos.PerformLayout();
+            this.flpBusqueda.ResumeLayout(false);
+            this.flpBusqueda.PerformLayout();
+            this.tlpRaiz.ResumeLayout(false);
+            this.tlpRaiz.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
         }
 
         #endregion
 
+        private System.Windows.Forms.TableLayoutPanel tlpRaiz;
         private System.Windows.Forms.Label lblTitulo;
-        private System.Windows.Forms.Label lblBuscar;
+        private System.Windows.Forms.FlowLayoutPanel flpBusqueda;
         private System.Windows.Forms.TextBox txtBuscar;
-        private System.Windows.Forms.Button btnBuscar;
-        private System.Windows.Forms.GroupBox gbDatos;
+        private Vista.Comun.BotonModerno btnBuscar;
+        private Vista.Comun.PanelTarjeta pnlDatos;
+        private System.Windows.Forms.TableLayoutPanel tlpCampos;
         private System.Windows.Forms.Label lblNombre;
         private System.Windows.Forms.TextBox txtNombre;
         private System.Windows.Forms.Label lblUsuario;
@@ -344,9 +406,12 @@ namespace Vista.Usuarios
         private System.Windows.Forms.ComboBox cboRol;
         private System.Windows.Forms.Label lblEstado;
         private System.Windows.Forms.ComboBox cboEstado;
-        private System.Windows.Forms.Button btnNuevo;
-        private System.Windows.Forms.Button btnGuardar;
-        private System.Windows.Forms.Button btnEliminar;
+        private System.Windows.Forms.Label lblSeccion;
+        private System.Windows.Forms.FlowLayoutPanel flpBotones;
+        private Vista.Comun.BotonModerno btnNuevo;
+        private Vista.Comun.BotonModerno btnGuardar;
+        private Vista.Comun.BotonModerno btnEliminar;
+        private Vista.Comun.PanelTarjeta pnlTabla;
         private System.Windows.Forms.DataGridView dgv;
     }
 }

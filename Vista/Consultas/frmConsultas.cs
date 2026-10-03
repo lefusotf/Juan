@@ -22,6 +22,7 @@ namespace Vista.Consultas
 
         private void frmConsultas_Load(object sender, EventArgs e)
         {
+            Responsive.Aplicar(tlpCampos, ClientSize.Width);
             CargarCombos();
 
             // Control de permisos: sin permiso de gestión solo se puede consultar
@@ -29,7 +30,7 @@ namespace Vista.Consultas
             btnNuevo.Enabled = puede;
             btnGuardar.Enabled = puede;
             btnEliminar.Enabled = puede;
-            gbDatos.Enabled = puede;
+            pnlDatos.Enabled = puede;
 
             CargarDatos();
             Nuevo();
@@ -174,6 +175,12 @@ namespace Vista.Consultas
         }
 
         // ---------------- Eventos de la pantalla ----------------
+
+        // Diseño adaptable: una o dos columnas de campos según el ancho disponible
+        private void frmConsultas_Resize(object sender, EventArgs e)
+        {
+            Responsive.Aplicar(tlpCampos, ClientSize.Width);
+        }
 
         private void btnNuevo_Click(object sender, EventArgs e)
         {
