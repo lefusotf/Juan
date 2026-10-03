@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Windows.Forms;
 using Modelos.Datos;
 using Modelos.Utilidades;
@@ -10,7 +9,7 @@ using Vista.Comun;
 namespace Vista.Usuarios
 {
     /// <summary>Asignación de permisos a cada rol desde dentro del sistema.</summary>
-    public class frmRoles : Form
+    public partial class frmRoles : Form
     {
         private class ItemPermiso
         {
@@ -20,62 +19,14 @@ namespace Vista.Usuarios
             public override string ToString() { return Descripcion + "  [" + Codigo + "]"; }
         }
 
-        private readonly ListBox lstRoles = new ListBox();
-        private readonly CheckedListBox clbPermisos = new CheckedListBox();
-        private readonly Label lblDescripcion = new Label();
-        private readonly Button btnGuardar = new Button();
-        private DataTable _roles;
         private bool _cargando;
 
         public frmRoles()
         {
-            Font = Estilo.Fuente;
-            BackColor = Estilo.Fondo;
-            Text = "Roles y permisos";
-
-            Label titulo = new Label
-            {
-                Text = "Roles y permisos",
-                Font = Estilo.FuenteTitulo,
-                ForeColor = Estilo.PrimarioOscuro,
-                Dock = DockStyle.Top,
-                Height = 48,
-                TextAlign = ContentAlignment.MiddleLeft,
-                Padding = new Padding(16, 0, 0, 0)
-            };
-
-            GroupBox gbRoles = new GroupBox { Text = "Roles", Dock = DockStyle.Left, Width = 260, Padding = new Padding(10) };
-            lstRoles.Dock = DockStyle.Fill;
-            lstRoles.SelectedIndexChanged += (s, e) => MostrarPermisosDelRol();
-            gbRoles.Controls.Add(lstRoles);
-
-            GroupBox gbPermisos = new GroupBox { Text = "Permisos del rol seleccionado", Dock = DockStyle.Fill, Padding = new Padding(10) };
-            lblDescripcion.Dock = DockStyle.Top;
-            lblDescripcion.Height = 30;
-            clbPermisos.Dock = DockStyle.Fill;
-            clbPermisos.CheckOnClick = true;
-
-            btnGuardar.Text = "Guardar permisos";
-            Estilo.Boton(btnGuardar, Estilo.Primario);
-            btnGuardar.Width = 170;
-            btnGuardar.Dock = DockStyle.Bottom;
-            btnGuardar.Click += (s, e) => GuardarPermisos();
-
-            gbPermisos.Controls.Add(clbPermisos);
-            gbPermisos.Controls.Add(btnGuardar);
-            gbPermisos.Controls.Add(lblDescripcion);
-
-            Panel cuerpo = new Panel { Dock = DockStyle.Fill, Padding = new Padding(16, 0, 16, 16) };
-            cuerpo.Controls.Add(gbPermisos);
-            cuerpo.Controls.Add(gbRoles);
-
-            Controls.Add(cuerpo);
-            Controls.Add(titulo);
-
-            Load += (s, e) => CargarCatalogos();
+            InitializeComponent();
         }
 
-        private void CargarCatalogos()
+        private void frmRoles_Load(object sender, EventArgs e)
         {
             try
             {
@@ -90,8 +41,7 @@ namespace Vista.Usuarios
                     });
                 }
 
-                _roles = RolDatos.Listar();
-                lstRoles.DataSource = _roles;
+                lstRoles.DataSource = RolDatos.Listar();
                 lstRoles.DisplayMember = "nombre";
                 lstRoles.ValueMember = "idRol";
             }
@@ -103,6 +53,11 @@ namespace Vista.Usuarios
             {
                 _cargando = false;
             }
+            MostrarPermisosDelRol();
+        }
+
+        private void lstRoles_SelectedIndexChanged(object sender, EventArgs e)
+        {
             MostrarPermisosDelRol();
         }
 
@@ -123,7 +78,7 @@ namespace Vista.Usuarios
             }
         }
 
-        private void GuardarPermisos()
+        private void btnGuardar_Click(object sender, EventArgs e)
         {
             if (lstRoles.SelectedItem == null)
             {

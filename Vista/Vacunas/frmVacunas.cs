@@ -1,33 +1,30 @@
-using System.Drawing;
+using System;
 using System.Windows.Forms;
-using Vista.Comun;
 
 namespace Vista.Vacunas
 {
-    /// <summary>Contenedor con TabControl: catálogo de vacunas y aplicación de vacunas a mascotas.</summary>
-    public class frmVacunas : Form
+    /// <summary>Contenedor con TabControl: aplicación de vacunas a mascotas y catálogo de vacunas.</summary>
+    public partial class frmVacunas : Form
     {
         public frmVacunas()
         {
-            Font = Estilo.Fuente;
-            BackColor = Estilo.Fondo;
-            Text = "Vacunas";
-
-            TabControl tabs = new TabControl { Dock = DockStyle.Fill };
-            tabs.TabPages.Add(CrearPestana("Aplicación de vacunas", new frmAplicacionVacunas()));
-            tabs.TabPages.Add(CrearPestana("Catálogo de vacunas", new frmCatalogoVacunas()));
-            Controls.Add(tabs);
+            InitializeComponent();
         }
 
-        private static TabPage CrearPestana(string titulo, Form formulario)
+        private void frmVacunas_Load(object sender, EventArgs e)
         {
-            TabPage pagina = new TabPage(titulo) { BackColor = Estilo.Fondo };
+            // Cada pestaña muestra un formulario incrustado
+            Incrustar(tabAplicacion, new frmAplicacionVacunas());
+            Incrustar(tabCatalogo, new frmCatalogoVacunas());
+        }
+
+        private static void Incrustar(TabPage pagina, Form formulario)
+        {
             formulario.TopLevel = false;
             formulario.FormBorderStyle = FormBorderStyle.None;
             formulario.Dock = DockStyle.Fill;
             pagina.Controls.Add(formulario);
             formulario.Show();
-            return pagina;
         }
     }
 }

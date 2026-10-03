@@ -4,42 +4,86 @@ using System.Windows.Forms;
 using Modelos.Datos;
 using Modelos.Entidades;
 using Modelos.Seguridad;
+using Modelos.Utilidades;
 using Vista.Comun;
 
 namespace Vista.Citas
 {
-    public class frmCitas : FormCrudBase
+    public partial class frmCitas : Form
     {
-        private readonly ComboBox cboMascota = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
-        private readonly ComboBox cboVeterinario = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
-        private readonly DateTimePicker dtpFechaHora = new DateTimePicker { Format = DateTimePickerFormat.Custom, CustomFormat = "dd/MM/yyyy HH:mm" };
-        private readonly ComboBox cboEstado = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
-        private readonly TextBox txtMotivo = new TextBox { MaxLength = 250 };
+        private const string Modulo = "Citas";
+        private int _id;          // id del registro seleccionado (0 = registro nuevo)
+        private bool _cargando;   // evita reaccionar a la selección mientras se llena la tabla
 
-        protected override string TituloFormulario { get { return "Citas médicas"; } }
-        protected override string Modulo { get { return "Citas"; } }
-        protected override string ColumnaId { get { return "idCita"; } }
-        protected override bool PuedeGestionar { get { return Sesion.Tiene(Permisos.CitasGestionar); } }
-
-        protected override void ConstruirCampos()
+        public frmCitas()
         {
-            cboEstado.Items.AddRange(new object[] { "Programada", "Atendida", "Cancelada" });
+            InitializeComponent();
+        }
 
-            AgregarCampo("Mascota *", cboMascota);
-            AgregarCampo("Veterinario *", cboVeterinario);
-            AgregarCampo("Fecha y hora *", dtpFechaHora);
-            AgregarCampo("Estado", cboEstado);
-            AgregarCampo("Motivo *", txtMotivo, true);
+        private void frmCitas_Load(object sender, EventArgs e)
+        {
+            CargarCombos();
 
+            // Control de permisos: sin permiso de gestión solo se puede consultar
+            bool puede = Sesion.Tiene(Permisos.CitasGestionar);
+            btnNuevo.Enabled = puede;
+            btnGuardar.Enabled = puede;
+            btnEliminar.Enabled = puede;
+            gbDatos.Enabled = puede;
+
+            CargarDatos();
+            Nuevo();
+        }
+
+        private void CargarCombos()
+        {
+            cboMascota.DataSource = MascotaDatos.ListarParaCombo();
+            cboMascota.DisplayMember = "descripcion";
+            cboMascota.ValueMember = "idMascota";
+
+            cboVeterinario.DataSource = UsuarioDatos.ListarVeterinarios();
+            cboVeterinario.DisplayMember = "nombreCompleto";
+            cboVeterinario.ValueMember = "idUsuario";
+        }
+
+        private void CargarDatos()
+        {
             try
             {
-                cboMascota.DataSource = MascotaDatos.ListarParaCombo();
-                cboMascota.DisplayMember = "descripcion";
-                cboMascota.ValueMember = "idMascota";
+                _cargando = true;
+                dgv.DataSource = CitaDatos.Listar(txtBuscar.Text.Trim());
+                ConfigurarColumnas();
+                dgv.ClearSelection();
+            }
+            catch (Exception ex)
+            {
+                Mensajes.Error(Modulo, ex, "cargar");
+            }
+            finally
+            {
+                _cargando = false;
+            }
+        }
 
-                cboVeterinario.DataSource = UsuarioDatos.ListarVeterinarios();
-                cboVeterinario.DisplayMember = "nombreCompleto";
-                cboVeterinario.ValueMember = "idUsuario";
+        private void ConfigurarColumnas()
+        {
+            GridUtil.Ocultar(dgv, "idCita", "idMascota", "idVeterinario");
+            GridUtil.Encabezado(dgv, "mascota", "Mascota");
+            GridUtil.Encabezado(dgv, "propietario", "Propietario");
+            GridUtil.Encabezado(dgv, "veterinario", "Veterinario");
+            GridUtil.Encabezado(dgv, "fechaHora", "Fecha y hora");
+            GridUtil.Encabezado(dgv, "motivo", "Motivo");
+            GridUtil.Encabezado(dgv, "estado", "Estado");
+            GridUtil.Formato(dgv, "fechaHora", "dd/MM/yyyy HH:mm");
+        }
+
+        private void dgv_SelectionChanged(object sender, EventArgs e)
+        {
+            if (_cargando || dgv.CurrentRow == null || !dgv.CurrentRow.Selected) return;
+            try
+            {
+                _id = Convert.ToInt32(dgv.CurrentRow.Cells["idCita"].Value);
+                MostrarFila(dgv.CurrentRow);
             }
             catch (Exception ex)
             {
@@ -47,24 +91,7 @@ namespace Vista.Citas
             }
         }
 
-        protected override DataTable ObtenerDatos(string filtro)
-        {
-            return CitaDatos.Listar(filtro);
-        }
-
-        protected override void ConfigurarColumnas()
-        {
-            OcultarColumnas("idCita", "idMascota", "idVeterinario");
-            Encabezado("mascota", "Mascota");
-            Encabezado("propietario", "Propietario");
-            Encabezado("veterinario", "Veterinario");
-            Encabezado("fechaHora", "Fecha y hora");
-            Encabezado("motivo", "Motivo");
-            Encabezado("estado", "Estado");
-            if (dgv.Columns.Contains("fechaHora")) dgv.Columns["fechaHora"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
-        }
-
-        protected override void MostrarFila(DataGridViewRow f)
+        private void MostrarFila(DataGridViewRow f)
         {
             cboMascota.SelectedValue = Convert.ToInt32(f.Cells["idMascota"].Value);
             cboVeterinario.SelectedValue = Convert.ToInt32(f.Cells["idVeterinario"].Value);
@@ -73,7 +100,14 @@ namespace Vista.Citas
             txtMotivo.Text = f.Cells["motivo"].Value.ToString();
         }
 
-        protected override void LimpiarCampos()
+        private void Nuevo()
+        {
+            _id = 0;
+            LimpiarCampos();
+            dgv.ClearSelection();
+        }
+
+        private void LimpiarCampos()
         {
             if (cboMascota.Items.Count > 0) cboMascota.SelectedIndex = 0;
             if (cboVeterinario.Items.Count > 0) cboVeterinario.SelectedIndex = 0;
@@ -83,13 +117,7 @@ namespace Vista.Citas
             cboMascota.Focus();
         }
 
-        private DateTime FechaSinSegundos()
-        {
-            DateTime v = dtpFechaHora.Value;
-            return new DateTime(v.Year, v.Month, v.Day, v.Hour, v.Minute, 0);
-        }
-
-        protected override bool Validar()
+        private bool Validar()
         {
             if (cboMascota.SelectedValue == null)
             {
@@ -103,10 +131,10 @@ namespace Vista.Citas
                 cboVeterinario.Focus();
                 return false;
             }
-            if (Falla(Validaciones.Requerido(txtMotivo.Text, "Motivo"), txtMotivo)) return false;
+            if (Mensajes.Invalido(Validaciones.Requerido(txtMotivo.Text, "Motivo"), txtMotivo)) return false;
 
             bool programada = cboEstado.SelectedItem.ToString() == "Programada";
-            if (programada && IdSeleccionado == 0 && FechaSinSegundos() < DateTime.Now)
+            if (programada && _id == 0 && FechaSinSegundos() < DateTime.Now)
             {
                 Mensajes.Advertencia("La fecha y hora de una cita nueva no puede estar en el pasado.");
                 dtpFechaHora.Focus();
@@ -116,7 +144,7 @@ namespace Vista.Citas
             {
                 try
                 {
-                    if (CitaDatos.VeterinarioOcupado(Convert.ToInt32(cboVeterinario.SelectedValue), FechaSinSegundos(), IdSeleccionado))
+                    if (CitaDatos.VeterinarioOcupado(Convert.ToInt32(cboVeterinario.SelectedValue), FechaSinSegundos(), _id))
                     {
                         Mensajes.Advertencia("El veterinario ya tiene una cita programada a esa fecha y hora.");
                         dtpFechaHora.Focus();
@@ -132,11 +160,11 @@ namespace Vista.Citas
             return true;
         }
 
-        protected override void GuardarRegistro(bool esNuevo)
+        private void GuardarRegistro(bool esNuevo)
         {
             Cita c = new Cita
             {
-                IdCita = IdSeleccionado,
+                IdCita = _id,
                 IdMascota = Convert.ToInt32(cboMascota.SelectedValue),
                 IdVeterinario = Convert.ToInt32(cboVeterinario.SelectedValue),
                 FechaHora = FechaSinSegundos(),
@@ -147,9 +175,77 @@ namespace Vista.Citas
             if (esNuevo) CitaDatos.Insertar(c); else CitaDatos.Actualizar(c);
         }
 
-        protected override void EliminarRegistro(int id)
+        private void EliminarRegistro(int id)
         {
             CitaDatos.Eliminar(id);
+        }
+
+        private DateTime FechaSinSegundos()
+        {
+            DateTime v = dtpFechaHora.Value;
+            return new DateTime(v.Year, v.Month, v.Day, v.Hour, v.Minute, 0);
+        }
+
+        // ---------------- Eventos de la pantalla ----------------
+
+        private void btnNuevo_Click(object sender, EventArgs e)
+        {
+            Nuevo();
+        }
+
+        private void btnBuscar_Click(object sender, EventArgs e)
+        {
+            CargarDatos();
+        }
+
+        private void txtBuscar_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                CargarDatos();
+            }
+        }
+
+        private void btnGuardar_Click(object sender, EventArgs e)
+        {
+            if (!Validar()) return;
+            bool esNuevo = _id == 0;
+            try
+            {
+                GuardarRegistro(esNuevo);
+                Logger.Info(Modulo, esNuevo ? "Registro creado" : "Registro actualizado (id " + _id + ")");
+                Mensajes.Info(esNuevo ? "Registro guardado correctamente." : "Registro actualizado correctamente.");
+                CargarDatos();
+                Nuevo();
+            }
+            catch (Exception ex)
+            {
+                Mensajes.Error(Modulo, ex, "guardar");
+            }
+        }
+
+        private void btnEliminar_Click(object sender, EventArgs e)
+        {
+            if (_id == 0)
+            {
+                Mensajes.Advertencia("Seleccione un registro de la tabla para eliminarlo.");
+                return;
+            }
+            if (!Mensajes.Confirmar("¿Está seguro de eliminar el registro seleccionado?")) return;
+            try
+            {
+                int id = _id;
+                EliminarRegistro(id);
+                Logger.Info(Modulo, "Registro eliminado (id " + id + ")");
+                Mensajes.Info("Registro eliminado correctamente.");
+                CargarDatos();
+                Nuevo();
+            }
+            catch (Exception ex)
+            {
+                Mensajes.Error(Modulo, ex, "eliminar");
+            }
         }
     }
 }

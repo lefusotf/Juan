@@ -20,6 +20,15 @@ namespace Vista.Comun
             MessageBox.Show(mensaje, Titulo, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
+        /// <summary>Muestra la advertencia y enfoca el control si hay error de validación. Devuelve true si hubo error.</summary>
+        public static bool Invalido(string error, Control foco)
+        {
+            if (error == null) return false;
+            Advertencia(error);
+            if (foco != null) foco.Focus();
+            return true;
+        }
+
         public static bool Confirmar(string pregunta)
         {
             return MessageBox.Show(pregunta, Titulo, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;

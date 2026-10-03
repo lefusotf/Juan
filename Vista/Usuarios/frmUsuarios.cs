@@ -4,41 +4,82 @@ using System.Windows.Forms;
 using Modelos.Datos;
 using Modelos.Entidades;
 using Modelos.Seguridad;
+using Modelos.Utilidades;
 using Vista.Comun;
 
 namespace Vista.Usuarios
 {
-    /// <summary>CRUD de usuarios (personal) con asignación de rol. Las contraseñas se guardan con BCrypt.</summary>
-    public class frmUsuarios : FormCrudBase
+    public partial class frmUsuarios : Form
     {
-        private readonly TextBox txtNombre = new TextBox { MaxLength = 150 };
-        private readonly TextBox txtUsuario = new TextBox { MaxLength = 30 };
-        private readonly TextBox txtContrasena = new TextBox { MaxLength = 100, UseSystemPasswordChar = true };
-        private readonly TextBox txtCorreo = new TextBox { MaxLength = 150 };
-        private readonly ComboBox cboRol = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
-        private readonly ComboBox cboEstado = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
+        private const string Modulo = "Usuarios";
+        private int _id;          // id del registro seleccionado (0 = registro nuevo)
+        private bool _cargando;   // evita reaccionar a la selección mientras se llena la tabla
 
-        protected override string TituloFormulario { get { return "Gestión de usuarios"; } }
-        protected override string Modulo { get { return "Usuarios"; } }
-        protected override string ColumnaId { get { return "idUsuario"; } }
-        protected override bool PuedeGestionar { get { return Sesion.Tiene(Permisos.UsuariosGestionar); } }
-
-        protected override void ConstruirCampos()
+        public frmUsuarios()
         {
-            cboEstado.Items.AddRange(new object[] { "Activo", "Inactivo" });
+            InitializeComponent();
+        }
 
-            AgregarCampo("Nombre completo *", txtNombre);
-            AgregarCampo("Usuario *", txtUsuario);
-            AgregarCampo("Contraseña *", txtContrasena);
-            AgregarCampo("Correo", txtCorreo);
-            AgregarCampo("Rol *", cboRol);
-            AgregarCampo("Estado", cboEstado);
+        private void frmUsuarios_Load(object sender, EventArgs e)
+        {
+            CargarCombos();
 
+            // Control de permisos: sin permiso de gestión solo se puede consultar
+            bool puede = Sesion.Tiene(Permisos.UsuariosGestionar);
+            btnNuevo.Enabled = puede;
+            btnGuardar.Enabled = puede;
+            btnEliminar.Enabled = puede;
+            gbDatos.Enabled = puede;
+
+            CargarDatos();
+            Nuevo();
+        }
+
+        private void CargarCombos()
+        {
+            cboRol.DataSource = RolDatos.Listar();
+            cboRol.DisplayMember = "nombre";
+            cboRol.ValueMember = "idRol";
+        }
+
+        private void CargarDatos()
+        {
             try
             {
-                cboRol.DataSource = RolDatos.Listar();
-                cboRol.DisplayMember = "nombre";
-                cboRol.ValueMember = "idRol";
+                _cargando = true;
+                dgv.DataSource = UsuarioDatos.Listar(txtBuscar.Text.Trim());
+                ConfigurarColumnas();
+                dgv.ClearSelection();
+            }
+            catch (Exception ex)
+            {
+                Mensajes.Error(Modulo, ex, "cargar");
+            }
+            finally
+            {
+                _cargando = false;
+            }
+        }
+
+        private void ConfigurarColumnas()
+        {
+            GridUtil.Ocultar(dgv, "idUsuario", "idRol");
+            GridUtil.Encabezado(dgv, "nombreCompleto", "Nombre");
+            GridUtil.Encabezado(dgv, "nombreUsuario", "Usuario");
+            GridUtil.Encabezado(dgv, "correo", "Correo");
+            GridUtil.Encabezado(dgv, "rol", "Rol");
+            GridUtil.Encabezado(dgv, "estado", "Estado");
+            GridUtil.Encabezado(dgv, "fechaCreacion", "Creado");
+            GridUtil.Formato(dgv, "fechaCreacion", "dd/MM/yyyy");
+        }
+
+        private void dgv_SelectionChanged(object sender, EventArgs e)
+        {
+            if (_cargando || dgv.CurrentRow == null || !dgv.CurrentRow.Selected) return;
+            try
+            {
+                _id = Convert.ToInt32(dgv.CurrentRow.Cells["idUsuario"].Value);
+                MostrarFila(dgv.CurrentRow);
             }
             catch (Exception ex)
             {
@@ -46,24 +87,7 @@ namespace Vista.Usuarios
             }
         }
 
-        protected override DataTable ObtenerDatos(string filtro)
-        {
-            return UsuarioDatos.Listar(filtro);
-        }
-
-        protected override void ConfigurarColumnas()
-        {
-            OcultarColumnas("idUsuario", "idRol");
-            Encabezado("nombreCompleto", "Nombre");
-            Encabezado("nombreUsuario", "Usuario");
-            Encabezado("correo", "Correo");
-            Encabezado("rol", "Rol");
-            Encabezado("estado", "Estado");
-            Encabezado("fechaCreacion", "Creado");
-            if (dgv.Columns.Contains("fechaCreacion")) dgv.Columns["fechaCreacion"].DefaultCellStyle.Format = "dd/MM/yyyy";
-        }
-
-        protected override void MostrarFila(DataGridViewRow f)
+        private void MostrarFila(DataGridViewRow f)
         {
             txtNombre.Text = f.Cells["nombreCompleto"].Value.ToString();
             txtUsuario.Text = f.Cells["nombreUsuario"].Value.ToString();
@@ -73,19 +97,29 @@ namespace Vista.Usuarios
             cboEstado.SelectedItem = f.Cells["estado"].Value.ToString();
         }
 
-        protected override void LimpiarCampos()
+        private void Nuevo()
         {
-            txtNombre.Clear(); txtUsuario.Clear(); txtContrasena.Clear(); txtCorreo.Clear();
+            _id = 0;
+            LimpiarCampos();
+            dgv.ClearSelection();
+        }
+
+        private void LimpiarCampos()
+        {
+            txtNombre.Clear();
+            txtUsuario.Clear();
+            txtContrasena.Clear();
+            txtCorreo.Clear();
             if (cboRol.Items.Count > 0) cboRol.SelectedIndex = 0;
             cboEstado.SelectedIndex = 0;
             txtNombre.Focus();
         }
 
-        protected override bool Validar()
+        private bool Validar()
         {
-            if (Falla(Validaciones.Requerido(txtNombre.Text, "Nombre completo"), txtNombre)) return false;
-            if (Falla(Validaciones.NombreUsuario(txtUsuario.Text), txtUsuario)) return false;
-            if (Falla(Validaciones.Correo(txtCorreo.Text), txtCorreo)) return false;
+            if (Mensajes.Invalido(Validaciones.Requerido(txtNombre.Text, "Nombre completo"), txtNombre)) return false;
+            if (Mensajes.Invalido(Validaciones.NombreUsuario(txtUsuario.Text), txtUsuario)) return false;
+            if (Mensajes.Invalido(Validaciones.Correo(txtCorreo.Text), txtCorreo)) return false;
 
             if (cboRol.SelectedValue == null)
             {
@@ -94,12 +128,12 @@ namespace Vista.Usuarios
                 return false;
             }
 
-            bool esNuevo = IdSeleccionado == 0;
+            bool esNuevo = _id == 0;
             if (esNuevo || txtContrasena.Text.Length > 0)
-                if (Falla(Validaciones.Contrasena(txtContrasena.Text), txtContrasena)) return false;
+                if (Mensajes.Invalido(Validaciones.Contrasena(txtContrasena.Text), txtContrasena)) return false;
 
             // Evitar que el administrador se bloquee a sí mismo
-            if (!esNuevo && IdSeleccionado == Sesion.UsuarioActual.IdUsuario)
+            if (!esNuevo && _id == Sesion.UsuarioActual.IdUsuario)
             {
                 if (cboEstado.SelectedItem.ToString() != "Activo")
                 {
@@ -115,11 +149,11 @@ namespace Vista.Usuarios
             return true;
         }
 
-        protected override void GuardarRegistro(bool esNuevo)
+        private void GuardarRegistro(bool esNuevo)
         {
             Usuario u = new Usuario
             {
-                IdUsuario = IdSeleccionado,
+                IdUsuario = _id,
                 NombreCompleto = txtNombre.Text.Trim(),
                 NombreUsuario = txtUsuario.Text.Trim(),
                 Contrasena = txtContrasena.Text,
@@ -130,11 +164,73 @@ namespace Vista.Usuarios
             if (esNuevo) UsuarioDatos.Insertar(u); else UsuarioDatos.Actualizar(u);
         }
 
-        protected override void EliminarRegistro(int id)
+        private void EliminarRegistro(int id)
         {
             if (id == Sesion.UsuarioActual.IdUsuario)
                 throw new InvalidOperationException("No puede eliminar el usuario con el que inició sesión.");
             UsuarioDatos.Eliminar(id);
+        }
+
+        // ---------------- Eventos de la pantalla ----------------
+
+        private void btnNuevo_Click(object sender, EventArgs e)
+        {
+            Nuevo();
+        }
+
+        private void btnBuscar_Click(object sender, EventArgs e)
+        {
+            CargarDatos();
+        }
+
+        private void txtBuscar_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                CargarDatos();
+            }
+        }
+
+        private void btnGuardar_Click(object sender, EventArgs e)
+        {
+            if (!Validar()) return;
+            bool esNuevo = _id == 0;
+            try
+            {
+                GuardarRegistro(esNuevo);
+                Logger.Info(Modulo, esNuevo ? "Registro creado" : "Registro actualizado (id " + _id + ")");
+                Mensajes.Info(esNuevo ? "Registro guardado correctamente." : "Registro actualizado correctamente.");
+                CargarDatos();
+                Nuevo();
+            }
+            catch (Exception ex)
+            {
+                Mensajes.Error(Modulo, ex, "guardar");
+            }
+        }
+
+        private void btnEliminar_Click(object sender, EventArgs e)
+        {
+            if (_id == 0)
+            {
+                Mensajes.Advertencia("Seleccione un registro de la tabla para eliminarlo.");
+                return;
+            }
+            if (!Mensajes.Confirmar("¿Está seguro de eliminar el registro seleccionado?")) return;
+            try
+            {
+                int id = _id;
+                EliminarRegistro(id);
+                Logger.Info(Modulo, "Registro eliminado (id " + id + ")");
+                Mensajes.Info("Registro eliminado correctamente.");
+                CargarDatos();
+                Nuevo();
+            }
+            catch (Exception ex)
+            {
+                Mensajes.Error(Modulo, ex, "eliminar");
+            }
         }
     }
 }

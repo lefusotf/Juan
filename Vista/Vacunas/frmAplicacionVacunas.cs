@@ -4,85 +4,99 @@ using System.Windows.Forms;
 using Modelos.Datos;
 using Modelos.Entidades;
 using Modelos.Seguridad;
+using Modelos.Utilidades;
 using Vista.Comun;
 
 namespace Vista.Vacunas
 {
-    /// <summary>Registro de vacunas aplicadas a las mascotas por el veterinario.</summary>
-    public class frmAplicacionVacunas : FormCrudBase
+    public partial class frmAplicacionVacunas : Form
     {
-        private readonly ComboBox cboMascota = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
-        private readonly ComboBox cboVacuna = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
-        private readonly ComboBox cboVeterinario = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
-        private readonly DateTimePicker dtpAplicacion = new DateTimePicker { Format = DateTimePickerFormat.Short };
-        private readonly DateTimePicker dtpProxima = new DateTimePicker { Format = DateTimePickerFormat.Short, ShowCheckBox = true };
-        private readonly TextBox txtObservaciones = new TextBox { MaxLength = 250 };
+        private const string Modulo = "Vacunas";
+        private int _id;          // id del registro seleccionado (0 = registro nuevo)
+        private bool _cargando;   // evita reaccionar a la selección mientras se llena la tabla
 
-        protected override string TituloFormulario { get { return "Aplicación de vacunas"; } }
-        protected override string Modulo { get { return "Vacunas"; } }
-        protected override string ColumnaId { get { return "idAplicacion"; } }
-        protected override bool PuedeGestionar { get { return Sesion.Tiene(Permisos.VacunasGestionar); } }
-
-        protected override void ConstruirCampos()
+        public frmAplicacionVacunas()
         {
-            AgregarCampo("Mascota *", cboMascota);
-            AgregarCampo("Vacuna *", cboVacuna);
-            AgregarCampo("Veterinario *", cboVeterinario);
-            AgregarCampo("Fecha aplicación *", dtpAplicacion);
-            AgregarCampo("Próxima dosis", dtpProxima);
-            AgregarCampo("Observaciones", txtObservaciones);
+            InitializeComponent();
+        }
 
+        private void frmAplicacionVacunas_Load(object sender, EventArgs e)
+        {
+            CargarCombos();
+
+            // Control de permisos: sin permiso de gestión solo se puede consultar
+            bool puede = Sesion.Tiene(Permisos.VacunasGestionar);
+            btnNuevo.Enabled = puede;
+            btnGuardar.Enabled = puede;
+            btnEliminar.Enabled = puede;
+            gbDatos.Enabled = puede;
+
+            CargarDatos();
+            Nuevo();
+        }
+
+        private void CargarCombos()
+        {
+            cboMascota.DataSource = MascotaDatos.ListarParaCombo();
+            cboMascota.DisplayMember = "descripcion";
+            cboMascota.ValueMember = "idMascota";
+
+            cboVacuna.DataSource = VacunaDatos.ListarParaCombo();
+            cboVacuna.DisplayMember = "nombre";
+            cboVacuna.ValueMember = "idVacuna";
+
+            cboVeterinario.DataSource = UsuarioDatos.ListarVeterinarios();
+            cboVeterinario.DisplayMember = "nombreCompleto";
+            cboVeterinario.ValueMember = "idUsuario";
+        }
+
+        private void CargarDatos()
+        {
             try
             {
-                cboMascota.DataSource = MascotaDatos.ListarParaCombo();
-                cboMascota.DisplayMember = "descripcion";
-                cboMascota.ValueMember = "idMascota";
-
-                cboVacuna.DataSource = VacunaDatos.ListarParaCombo();
-                cboVacuna.DisplayMember = "nombre";
-                cboVacuna.ValueMember = "idVacuna";
-
-                cboVeterinario.DataSource = UsuarioDatos.ListarVeterinarios();
-                cboVeterinario.DisplayMember = "nombreCompleto";
-                cboVeterinario.ValueMember = "idUsuario";
+                _cargando = true;
+                dgv.DataSource = AplicacionVacunaDatos.Listar(txtBuscar.Text.Trim());
+                ConfigurarColumnas();
+                dgv.ClearSelection();
             }
             catch (Exception ex)
             {
                 Mensajes.Error(Modulo, ex, "cargar");
             }
-
-            // La próxima dosis se sugiere según el intervalo de la vacuna elegida
-            cboVacuna.SelectionChangeCommitted += (s, e) => SugerirProximaDosis();
-            dtpAplicacion.ValueChanged += (s, e) => SugerirProximaDosis();
+            finally
+            {
+                _cargando = false;
+            }
         }
 
-        private void SugerirProximaDosis()
+        private void ConfigurarColumnas()
         {
-            DataRowView fila = cboVacuna.SelectedItem as DataRowView;
-            if (fila == null) return;
-            dtpProxima.Value = dtpAplicacion.Value.Date.AddDays(Convert.ToInt32(fila["intervaloDias"]));
-            dtpProxima.Checked = true;
+            GridUtil.Ocultar(dgv, "idAplicacion", "idMascota", "idVacuna", "idVeterinario");
+            GridUtil.Encabezado(dgv, "mascota", "Mascota");
+            GridUtil.Encabezado(dgv, "vacuna", "Vacuna");
+            GridUtil.Encabezado(dgv, "veterinario", "Veterinario");
+            GridUtil.Encabezado(dgv, "fechaAplicacion", "Aplicación");
+            GridUtil.Encabezado(dgv, "proximaDosis", "Próxima dosis");
+            GridUtil.Encabezado(dgv, "observaciones", "Observaciones");
+            GridUtil.Formato(dgv, "fechaAplicacion", "dd/MM/yyyy");
+            GridUtil.Formato(dgv, "proximaDosis", "dd/MM/yyyy");
         }
 
-        protected override DataTable ObtenerDatos(string filtro)
+        private void dgv_SelectionChanged(object sender, EventArgs e)
         {
-            return AplicacionVacunaDatos.Listar(filtro);
+            if (_cargando || dgv.CurrentRow == null || !dgv.CurrentRow.Selected) return;
+            try
+            {
+                _id = Convert.ToInt32(dgv.CurrentRow.Cells["idAplicacion"].Value);
+                MostrarFila(dgv.CurrentRow);
+            }
+            catch (Exception ex)
+            {
+                Mensajes.Error(Modulo, ex, "cargar");
+            }
         }
 
-        protected override void ConfigurarColumnas()
-        {
-            OcultarColumnas("idAplicacion", "idMascota", "idVacuna", "idVeterinario");
-            Encabezado("mascota", "Mascota");
-            Encabezado("vacuna", "Vacuna");
-            Encabezado("veterinario", "Veterinario");
-            Encabezado("fechaAplicacion", "Aplicación");
-            Encabezado("proximaDosis", "Próxima dosis");
-            Encabezado("observaciones", "Observaciones");
-            if (dgv.Columns.Contains("fechaAplicacion")) dgv.Columns["fechaAplicacion"].DefaultCellStyle.Format = "dd/MM/yyyy";
-            if (dgv.Columns.Contains("proximaDosis")) dgv.Columns["proximaDosis"].DefaultCellStyle.Format = "dd/MM/yyyy";
-        }
-
-        protected override void MostrarFila(DataGridViewRow f)
+        private void MostrarFila(DataGridViewRow f)
         {
             cboMascota.SelectedValue = Convert.ToInt32(f.Cells["idMascota"].Value);
             cboVacuna.SelectedValue = Convert.ToInt32(f.Cells["idVacuna"].Value);
@@ -100,7 +114,14 @@ namespace Vista.Vacunas
             txtObservaciones.Text = f.Cells["observaciones"].Value.ToString();
         }
 
-        protected override void LimpiarCampos()
+        private void Nuevo()
+        {
+            _id = 0;
+            LimpiarCampos();
+            dgv.ClearSelection();
+        }
+
+        private void LimpiarCampos()
         {
             if (cboMascota.Items.Count > 0) cboMascota.SelectedIndex = 0;
             if (cboVacuna.Items.Count > 0) cboVacuna.SelectedIndex = 0;
@@ -114,7 +135,7 @@ namespace Vista.Vacunas
             cboMascota.Focus();
         }
 
-        protected override bool Validar()
+        private bool Validar()
         {
             if (cboMascota.SelectedValue == null || cboVacuna.SelectedValue == null)
             {
@@ -142,11 +163,11 @@ namespace Vista.Vacunas
             return true;
         }
 
-        protected override void GuardarRegistro(bool esNuevo)
+        private void GuardarRegistro(bool esNuevo)
         {
             AplicacionVacuna a = new AplicacionVacuna
             {
-                IdAplicacion = IdSeleccionado,
+                IdAplicacion = _id,
                 IdMascota = Convert.ToInt32(cboMascota.SelectedValue),
                 IdVacuna = Convert.ToInt32(cboVacuna.SelectedValue),
                 IdVeterinario = Convert.ToInt32(cboVeterinario.SelectedValue),
@@ -157,9 +178,90 @@ namespace Vista.Vacunas
             if (esNuevo) AplicacionVacunaDatos.Insertar(a); else AplicacionVacunaDatos.Actualizar(a);
         }
 
-        protected override void EliminarRegistro(int id)
+        private void EliminarRegistro(int id)
         {
             AplicacionVacunaDatos.Eliminar(id);
+        }
+
+        // La próxima dosis se sugiere según el intervalo de la vacuna elegida
+        private void SugerirProximaDosis()
+        {
+            DataRowView fila = cboVacuna.SelectedItem as DataRowView;
+            if (fila == null) return;
+            dtpProxima.Value = dtpAplicacion.Value.Date.AddDays(Convert.ToInt32(fila["intervaloDias"]));
+            dtpProxima.Checked = true;
+        }
+
+        private void cboVacuna_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            SugerirProximaDosis();
+        }
+
+        private void dtpAplicacion_ValueChanged(object sender, EventArgs e)
+        {
+            SugerirProximaDosis();
+        }
+
+        // ---------------- Eventos de la pantalla ----------------
+
+        private void btnNuevo_Click(object sender, EventArgs e)
+        {
+            Nuevo();
+        }
+
+        private void btnBuscar_Click(object sender, EventArgs e)
+        {
+            CargarDatos();
+        }
+
+        private void txtBuscar_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                CargarDatos();
+            }
+        }
+
+        private void btnGuardar_Click(object sender, EventArgs e)
+        {
+            if (!Validar()) return;
+            bool esNuevo = _id == 0;
+            try
+            {
+                GuardarRegistro(esNuevo);
+                Logger.Info(Modulo, esNuevo ? "Registro creado" : "Registro actualizado (id " + _id + ")");
+                Mensajes.Info(esNuevo ? "Registro guardado correctamente." : "Registro actualizado correctamente.");
+                CargarDatos();
+                Nuevo();
+            }
+            catch (Exception ex)
+            {
+                Mensajes.Error(Modulo, ex, "guardar");
+            }
+        }
+
+        private void btnEliminar_Click(object sender, EventArgs e)
+        {
+            if (_id == 0)
+            {
+                Mensajes.Advertencia("Seleccione un registro de la tabla para eliminarlo.");
+                return;
+            }
+            if (!Mensajes.Confirmar("¿Está seguro de eliminar el registro seleccionado?")) return;
+            try
+            {
+                int id = _id;
+                EliminarRegistro(id);
+                Logger.Info(Modulo, "Registro eliminado (id " + id + ")");
+                Mensajes.Info("Registro eliminado correctamente.");
+                CargarDatos();
+                Nuevo();
+            }
+            catch (Exception ex)
+            {
+                Mensajes.Error(Modulo, ex, "eliminar");
+            }
         }
     }
 }

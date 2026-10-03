@@ -34,8 +34,8 @@ Veterinaria.sln
 │   ├── Datos/                     Acceso a datos (CRUD) por entidad
 │   ├── Seguridad/                 BCrypt, sesión y códigos de permiso
 │   └── Utilidades/                Logger (archivo + tabla bitácora)
-├── Vista/                         CAPA VISTA (Windows Forms)
-│   ├── Comun/                     Formulario base CRUD, estilos, mensajes, validaciones
+├── Vista/                         CAPA VISTA (Windows Forms; cada formulario tiene .cs + .Designer.cs)
+│   ├── Comun/                     Mensajes (MessageBox), validaciones, utilidades de tabla
 │   ├── Login/  Dashboard/  Usuarios/  Propietarios/  Mascotas/
 │   └── Citas/  Consultas/  Vacunas/  Bitacora/
 └── Documentacion/Documentacion.md Portada, índice, introducción, casos de uso, ER y diccionario de datos

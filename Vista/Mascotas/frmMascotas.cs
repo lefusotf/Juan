@@ -4,45 +4,84 @@ using System.Windows.Forms;
 using Modelos.Datos;
 using Modelos.Entidades;
 using Modelos.Seguridad;
+using Modelos.Utilidades;
 using Vista.Comun;
 
 namespace Vista.Mascotas
 {
-    public class frmMascotas : FormCrudBase
+    public partial class frmMascotas : Form
     {
-        private readonly ComboBox cboPropietario = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
-        private readonly TextBox txtNombre = new TextBox { MaxLength = 100 };
-        private readonly ComboBox cboEspecie = new ComboBox { DropDownStyle = ComboBoxStyle.DropDown, MaxLength = 50 };
-        private readonly TextBox txtRaza = new TextBox { MaxLength = 80 };
-        private readonly ComboBox cboSexo = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
-        private readonly DateTimePicker dtpNacimiento = new DateTimePicker { Format = DateTimePickerFormat.Short, ShowCheckBox = true };
-        private readonly NumericUpDown nudPeso = new NumericUpDown { DecimalPlaces = 2, Maximum = 999, Minimum = 0 };
-        private readonly TextBox txtColor = new TextBox { MaxLength = 50 };
+        private const string Modulo = "Mascotas";
+        private int _id;          // id del registro seleccionado (0 = registro nuevo)
+        private bool _cargando;   // evita reaccionar a la selección mientras se llena la tabla
 
-        protected override string TituloFormulario { get { return "Mascotas"; } }
-        protected override string Modulo { get { return "Mascotas"; } }
-        protected override string ColumnaId { get { return "idMascota"; } }
-        protected override bool PuedeGestionar { get { return Sesion.Tiene(Permisos.MascotasGestionar); } }
-
-        protected override void ConstruirCampos()
+        public frmMascotas()
         {
-            cboSexo.Items.AddRange(new object[] { "Macho", "Hembra" });
-            cboEspecie.Items.AddRange(new object[] { "Perro", "Gato", "Ave", "Conejo", "Roedor", "Reptil" });
+            InitializeComponent();
+        }
 
-            AgregarCampo("Propietario *", cboPropietario);
-            AgregarCampo("Nombre *", txtNombre);
-            AgregarCampo("Especie *", cboEspecie);
-            AgregarCampo("Raza", txtRaza);
-            AgregarCampo("Sexo *", cboSexo);
-            AgregarCampo("Fecha nacimiento", dtpNacimiento);
-            AgregarCampo("Peso (kg)", nudPeso);
-            AgregarCampo("Color", txtColor);
+        private void frmMascotas_Load(object sender, EventArgs e)
+        {
+            CargarCombos();
 
+            // Control de permisos: sin permiso de gestión solo se puede consultar
+            bool puede = Sesion.Tiene(Permisos.MascotasGestionar);
+            btnNuevo.Enabled = puede;
+            btnGuardar.Enabled = puede;
+            btnEliminar.Enabled = puede;
+            gbDatos.Enabled = puede;
+
+            CargarDatos();
+            Nuevo();
+        }
+
+        private void CargarCombos()
+        {
+            cboPropietario.DataSource = PropietarioDatos.Listar("");
+            cboPropietario.DisplayMember = "nombre";
+            cboPropietario.ValueMember = "idPropietario";
+        }
+
+        private void CargarDatos()
+        {
             try
             {
-                cboPropietario.DataSource = PropietarioDatos.Listar("");
-                cboPropietario.DisplayMember = "nombre";
-                cboPropietario.ValueMember = "idPropietario";
+                _cargando = true;
+                dgv.DataSource = MascotaDatos.Listar(txtBuscar.Text.Trim());
+                ConfigurarColumnas();
+                dgv.ClearSelection();
+            }
+            catch (Exception ex)
+            {
+                Mensajes.Error(Modulo, ex, "cargar");
+            }
+            finally
+            {
+                _cargando = false;
+            }
+        }
+
+        private void ConfigurarColumnas()
+        {
+            GridUtil.Ocultar(dgv, "idMascota", "idPropietario");
+            GridUtil.Encabezado(dgv, "propietario", "Propietario");
+            GridUtil.Encabezado(dgv, "nombre", "Nombre");
+            GridUtil.Encabezado(dgv, "especie", "Especie");
+            GridUtil.Encabezado(dgv, "raza", "Raza");
+            GridUtil.Encabezado(dgv, "sexo", "Sexo");
+            GridUtil.Encabezado(dgv, "fechaNacimiento", "Nacimiento");
+            GridUtil.Encabezado(dgv, "peso", "Peso (kg)");
+            GridUtil.Encabezado(dgv, "color", "Color");
+            GridUtil.Formato(dgv, "fechaNacimiento", "dd/MM/yyyy");
+        }
+
+        private void dgv_SelectionChanged(object sender, EventArgs e)
+        {
+            if (_cargando || dgv.CurrentRow == null || !dgv.CurrentRow.Selected) return;
+            try
+            {
+                _id = Convert.ToInt32(dgv.CurrentRow.Cells["idMascota"].Value);
+                MostrarFila(dgv.CurrentRow);
             }
             catch (Exception ex)
             {
@@ -50,26 +89,7 @@ namespace Vista.Mascotas
             }
         }
 
-        protected override DataTable ObtenerDatos(string filtro)
-        {
-            return MascotaDatos.Listar(filtro);
-        }
-
-        protected override void ConfigurarColumnas()
-        {
-            OcultarColumnas("idMascota", "idPropietario");
-            Encabezado("propietario", "Propietario");
-            Encabezado("nombre", "Nombre");
-            Encabezado("especie", "Especie");
-            Encabezado("raza", "Raza");
-            Encabezado("sexo", "Sexo");
-            Encabezado("fechaNacimiento", "Nacimiento");
-            Encabezado("peso", "Peso (kg)");
-            Encabezado("color", "Color");
-            if (dgv.Columns.Contains("fechaNacimiento")) dgv.Columns["fechaNacimiento"].DefaultCellStyle.Format = "dd/MM/yyyy";
-        }
-
-        protected override void MostrarFila(DataGridViewRow f)
+        private void MostrarFila(DataGridViewRow f)
         {
             cboPropietario.SelectedValue = Convert.ToInt32(f.Cells["idPropietario"].Value);
             txtNombre.Text = f.Cells["nombre"].Value.ToString();
@@ -89,10 +109,20 @@ namespace Vista.Mascotas
             txtColor.Text = f.Cells["color"].Value.ToString();
         }
 
-        protected override void LimpiarCampos()
+        private void Nuevo()
+        {
+            _id = 0;
+            LimpiarCampos();
+            dgv.ClearSelection();
+        }
+
+        private void LimpiarCampos()
         {
             if (cboPropietario.Items.Count > 0) cboPropietario.SelectedIndex = 0;
-            txtNombre.Clear(); cboEspecie.Text = ""; txtRaza.Clear(); txtColor.Clear();
+            txtNombre.Clear();
+            cboEspecie.Text = "";
+            txtRaza.Clear();
+            txtColor.Clear();
             cboSexo.SelectedIndex = 0;
             dtpNacimiento.Value = DateTime.Today;
             dtpNacimiento.Checked = false;
@@ -100,7 +130,7 @@ namespace Vista.Mascotas
             txtNombre.Focus();
         }
 
-        protected override bool Validar()
+        private bool Validar()
         {
             if (cboPropietario.SelectedValue == null)
             {
@@ -108,8 +138,8 @@ namespace Vista.Mascotas
                 cboPropietario.Focus();
                 return false;
             }
-            if (Falla(Validaciones.Requerido(txtNombre.Text, "Nombre"), txtNombre)) return false;
-            if (Falla(Validaciones.Requerido(cboEspecie.Text, "Especie"), cboEspecie)) return false;
+            if (Mensajes.Invalido(Validaciones.Requerido(txtNombre.Text, "Nombre"), txtNombre)) return false;
+            if (Mensajes.Invalido(Validaciones.Requerido(cboEspecie.Text, "Especie"), cboEspecie)) return false;
             if (dtpNacimiento.Checked && dtpNacimiento.Value.Date > DateTime.Today)
             {
                 Mensajes.Advertencia("La fecha de nacimiento no puede ser futura.");
@@ -119,11 +149,11 @@ namespace Vista.Mascotas
             return true;
         }
 
-        protected override void GuardarRegistro(bool esNuevo)
+        private void GuardarRegistro(bool esNuevo)
         {
             Mascota m = new Mascota
             {
-                IdMascota = IdSeleccionado,
+                IdMascota = _id,
                 IdPropietario = Convert.ToInt32(cboPropietario.SelectedValue),
                 Nombre = txtNombre.Text.Trim(),
                 Especie = cboEspecie.Text.Trim(),
@@ -136,9 +166,71 @@ namespace Vista.Mascotas
             if (esNuevo) MascotaDatos.Insertar(m); else MascotaDatos.Actualizar(m);
         }
 
-        protected override void EliminarRegistro(int id)
+        private void EliminarRegistro(int id)
         {
             MascotaDatos.Eliminar(id);
+        }
+
+        // ---------------- Eventos de la pantalla ----------------
+
+        private void btnNuevo_Click(object sender, EventArgs e)
+        {
+            Nuevo();
+        }
+
+        private void btnBuscar_Click(object sender, EventArgs e)
+        {
+            CargarDatos();
+        }
+
+        private void txtBuscar_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                CargarDatos();
+            }
+        }
+
+        private void btnGuardar_Click(object sender, EventArgs e)
+        {
+            if (!Validar()) return;
+            bool esNuevo = _id == 0;
+            try
+            {
+                GuardarRegistro(esNuevo);
+                Logger.Info(Modulo, esNuevo ? "Registro creado" : "Registro actualizado (id " + _id + ")");
+                Mensajes.Info(esNuevo ? "Registro guardado correctamente." : "Registro actualizado correctamente.");
+                CargarDatos();
+                Nuevo();
+            }
+            catch (Exception ex)
+            {
+                Mensajes.Error(Modulo, ex, "guardar");
+            }
+        }
+
+        private void btnEliminar_Click(object sender, EventArgs e)
+        {
+            if (_id == 0)
+            {
+                Mensajes.Advertencia("Seleccione un registro de la tabla para eliminarlo.");
+                return;
+            }
+            if (!Mensajes.Confirmar("¿Está seguro de eliminar el registro seleccionado?")) return;
+            try
+            {
+                int id = _id;
+                EliminarRegistro(id);
+                Logger.Info(Modulo, "Registro eliminado (id " + id + ")");
+                Mensajes.Info("Registro eliminado correctamente.");
+                CargarDatos();
+                Nuevo();
+            }
+            catch (Exception ex)
+            {
+                Mensajes.Error(Modulo, ex, "eliminar");
+            }
         }
     }
 }
