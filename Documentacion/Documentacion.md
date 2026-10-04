@@ -269,6 +269,16 @@ y en la tabla `bitacora`.
   captura excepciones no controladas.
 - **Logging de actividades:** inicio/cierre de sesión, intentos fallidos y cada alta, modificación o baja.
 
+### 7.1 Control de acceso por rol
+
+El administrador asigna los permisos de cada rol desde la pantalla **Roles y permisos**; los cambios se guardan en las tablas `rol`, `permiso` y `rolPermiso` y se aplican en el siguiente inicio de sesión de los usuarios de ese rol.
+
+![Pantalla de roles y permisos (rol Administrador)](capturas/roles_y_permisos.png)
+
+El menú solo muestra los módulos permitidos y los botones se habilitan según el permiso. En la siguiente captura, el veterinario tiene permiso de consulta en Mascotas pero no de gestión, por lo que el formulario y los botones aparecen deshabilitados.
+
+![Mascotas con el rol Veterinario (solo lectura)](capturas/mascotas_veterinario.png)
+
 ## 8. Cumplimiento de la rúbrica
 
 | # | Criterio | Dónde se cumple |
@@ -288,18 +298,42 @@ y en la tabla `bitacora`.
 
 ## 9. Manual rápido de uso
 
-1. Ejecutar `BaseDatos/Veterinaria.sql` y abrir `Veterinaria.sln`.
-2. Ingresar con `admin / Admin123*`, `dvera / Vet12345*` o `recep1 / Recep123*`.
-3. **Recepcionista:** Propietarios → Mascotas → Citas.
-4. **Veterinario:** Consultas médicas (historial) y Vacunas (aplicar y administrar catálogo).
-5. **Administrador:** Usuarios (crear personal y asignar rol), Roles y permisos, Bitácora y todos los módulos.
+### 9.1 Preparación
 
-## 10. Capturas del sistema
+1. Ejecutar `BaseDatos/Veterinaria.sql` en SQL Server y abrir `Veterinaria.sln` en Visual Studio.
+2. Escribir el nombre del servidor en `Modelos/Conexion_DB/Conexion.cs` (variable `servidor`).
+3. Establecer **Vista** como proyecto de inicio y ejecutar.
 
-**Roles y permisos (rol Administrador).** Desde esta pantalla el administrador asigna los permisos a cada rol; los cambios se guardan en las tablas `rol`, `permiso` y `rolPermiso`.
+### 9.2 Inicio de sesión
 
-![Pantalla de roles y permisos](capturas/roles_y_permisos.png)
+Se ingresa el usuario y la contraseña. La contraseña se verifica con BCrypt y, tras 3 intentos fallidos, el sistema se cierra. Usuarios de prueba: `admin / Admin123*`, `dvera / Vet12345*` y `recep1 / Recep123*`.
 
-**Control de permisos por rol (usuario Veterinario).** El menú solo muestra los módulos permitidos y, en Mascotas, el veterinario tiene permiso de consulta pero no de gestión, por lo que el formulario y los botones aparecen deshabilitados.
+![Pantalla de inicio de sesión](capturas/login.png)
 
-![Mascotas con el rol Veterinario (solo lectura)](capturas/mascotas_veterinario.png)
+### 9.3 Pantalla de inicio
+
+Después de iniciar sesión se muestra el menú lateral (solo con los módulos permitidos para el rol) y un resumen con el total de propietarios, mascotas, citas programadas, consultas y vacunas aplicadas, junto con las próximas citas.
+
+![Pantalla de inicio con estadísticas y próximas citas](capturas/inicio.png)
+
+### 9.4 Recepcionista: propietarios, mascotas y citas
+
+**Propietarios.** Se registran con nombre (solo letras), DUI y teléfono (solo números, con formato automático) y correo opcional.
+
+![Gestión de propietarios](capturas/propietarios.png)
+
+**Mascotas.** Cada mascota se asocia a un propietario y se registran su especie, raza, sexo, fecha de nacimiento, peso y color.
+
+![Gestión de mascotas](capturas/mascotas_admin.png)
+
+**Citas.** Se elige la mascota, el veterinario y la fecha y hora. El sistema no permite citas en el pasado ni dos citas del mismo veterinario a la misma hora.
+
+![Gestión de citas médicas](capturas/citas.png)
+
+### 9.5 Veterinario: historial médico y vacunas
+
+En **Consultas médicas** se registra y actualiza el historial clínico de cada mascota (motivo, diagnóstico y tratamiento). En **Vacunas** se administra el catálogo y se aplican vacunas a las mascotas; la próxima dosis se calcula según el intervalo de cada vacuna.
+
+### 9.6 Administrador: personal y control general
+
+En **Usuarios** se crean los usuarios del personal y se les asigna un rol; en **Roles y permisos** se definen los permisos de cada rol (ver sección 7.1); y en **Bitácora** se consultan las actividades y errores registrados. El administrador también tiene acceso a todos los demás módulos.
