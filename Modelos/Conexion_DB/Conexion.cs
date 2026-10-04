@@ -12,8 +12,8 @@ namespace Modelos.Conexion_DB
     public static class Conexion
     {
         // ===== CAMBIE AQUÍ EL NOMBRE DE SU SERVIDOR =====
-        // Ejemplos: "(localdb)\\MSSQLLocalDB", ".\\SQLEXPRESS", "DESKTOP-ABC123\\SQLEXPRESS"
-        private static string servidor = "(localdb)\\MSSQLLocalDB";
+        // Ejemplos: "(localdb)\\MSSQLLocalDB", ".\\SQLEXPRESS", "DESKTOP-POFECHT\\SQLEXPRESS"
+        private static string servidor = "DESKTOP-POFECHT\\SQLEXPRESS";
         private static string baseDeDatos = "Veterinaria";
 
         private static string ObtenerCadena()
