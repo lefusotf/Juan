@@ -54,6 +54,7 @@ y en la tabla `bitacora`.
 **Objetivo general:** digitalizar y centralizar la información clínica de la veterinaria.
 
 **Objetivos específicos:**
+
 - Registrar propietarios y mascotas evitando duplicidad de datos.
 - Agendar citas sin conflictos de horario para el veterinario.
 - Mantener el historial médico y el control de vacunación de cada mascota.
@@ -100,32 +101,11 @@ y en la tabla `bitacora`.
 
 ## 3. Arquitectura del sistema
 
-```mermaid
-flowchart LR
-    subgraph Vista["Capa Vista (Vista.csproj - Windows Forms)"]
-        L[Login] --> D[Dashboard]
-        D --> F[Formularios CRUD]
-        C[Comun: Tema, controles propios, Responsive, Mensajes, Validaciones]
-    end
-    subgraph Modelo["Capa Modelo (Modelos.csproj)"]
-        DA[Datos: UsuarioDatos, MascotaDatos...]
-        E[Entidades]
-        S[Seguridad: BCrypt, Sesion, Permisos]
-        LG[Utilidades: Logger]
-        CX[Conexion_DB]
-    end
-    DB[(SQL Server<br/>Veterinaria)]
-    F --> DA
-    L --> DA
-    DA --> CX --> DB
-    DA --> E
-    LG --> DB
-    S --> D
-```
+![Arquitectura MV del sistema](diagramas/arquitectura.png)
 
 | Carpeta | Responsabilidad |
 |---------|-----------------|
-| `Modelos/Conexion_DB` | Conexión a SQL Server (cadena en `App.config`) y métodos parametrizados |
+| `Modelos/Conexion_DB` | Conexión a SQL Server (servidor y base de datos definidos en la clase `Conexion`) y métodos parametrizados |
 | `Modelos/Entidades` | Clases de dominio (Usuario, Propietario, Mascota, Cita, Consulta, Vacuna...) |
 | `Modelos/Datos` | Operaciones CRUD por entidad (únicas con SQL) |
 | `Modelos/Seguridad` | Cifrado BCrypt, sesión actual y códigos de permisos |
@@ -135,48 +115,7 @@ flowchart LR
 
 ## 4. Diagrama de casos de uso
 
-```mermaid
-flowchart LR
-    ADM([Administrador])
-    VET([Veterinario])
-    REC([Recepcionista])
-
-    subgraph Sistema["Sistema de Gestión Veterinaria"]
-        UC1(Iniciar sesión)
-        UC2(Gestionar usuarios y asignar roles)
-        UC3(Asignar permisos a roles)
-        UC4(Consultar bitácora)
-        UC5(Registrar propietarios)
-        UC6(Registrar mascotas)
-        UC7(Agendar citas)
-        UC8(Consultar propietarios, mascotas y citas)
-        UC9(Actualizar historiales médicos)
-        UC10(Administrar catálogo de vacunas)
-        UC11(Aplicar vacunas)
-    end
-
-    ADM --- UC1
-    ADM --- UC2
-    ADM --- UC3
-    ADM --- UC4
-    ADM --- UC5
-    ADM --- UC6
-    ADM --- UC7
-    ADM --- UC9
-    ADM --- UC10
-    ADM --- UC11
-
-    REC --- UC1
-    REC --- UC5
-    REC --- UC6
-    REC --- UC7
-
-    VET --- UC1
-    VET --- UC8
-    VET --- UC9
-    VET --- UC10
-    VET --- UC11
-```
+![Diagrama de casos de uso](diagramas/casos_de_uso.png)
 
 **Descripción de actores**
 
@@ -188,89 +127,7 @@ flowchart LR
 
 ## 5. Diagrama entidad–relación
 
-```mermaid
-erDiagram
-    rol ||--o{ usuario : "tiene"
-    rol ||--o{ rolPermiso : "otorga"
-    permiso ||--o{ rolPermiso : "se asigna en"
-    propietario ||--o{ mascota : "posee"
-    mascota ||--o{ cita : "tiene"
-    mascota ||--o{ consulta : "tiene"
-    mascota ||--o{ aplicacionVacuna : "recibe"
-    vacuna ||--o{ aplicacionVacuna : "se aplica en"
-    usuario ||--o{ cita : "atiende (veterinario)"
-    usuario ||--o{ cita : "registra"
-    usuario ||--o{ consulta : "realiza"
-    usuario ||--o{ aplicacionVacuna : "aplica"
-
-    rol { int idRol PK
-          varchar nombre UK
-          varchar descripcion }
-    permiso { int idPermiso PK
-              varchar codigo UK
-              varchar descripcion }
-    rolPermiso { int idRol PK,FK
-                 int idPermiso PK,FK }
-    usuario { int idUsuario PK
-              varchar nombreCompleto
-              varchar nombreUsuario UK
-              varchar contrasena
-              varchar correo
-              int idRol FK
-              varchar estado
-              datetime fechaCreacion }
-    propietario { int idPropietario PK
-                  varchar nombre
-                  varchar dui UK
-                  varchar telefono
-                  varchar correo
-                  varchar direccion
-                  datetime fechaRegistro }
-    mascota { int idMascota PK
-              int idPropietario FK
-              varchar nombre
-              varchar especie
-              varchar raza
-              char sexo
-              date fechaNacimiento
-              decimal peso
-              varchar color
-              datetime fechaRegistro }
-    vacuna { int idVacuna PK
-             varchar nombre UK
-             varchar descripcion
-             varchar especieDestino
-             int intervaloDias }
-    cita { int idCita PK
-           int idMascota FK
-           int idVeterinario FK
-           datetime fechaHora
-           varchar motivo
-           varchar estado
-           int idUsuarioRegistro FK }
-    consulta { int idConsulta PK
-               int idMascota FK
-               int idVeterinario FK
-               datetime fecha
-               varchar motivo
-               varchar diagnostico
-               varchar tratamiento
-               varchar observaciones }
-    aplicacionVacuna { int idAplicacion PK
-                       int idMascota FK
-                       int idVacuna FK
-                       int idVeterinario FK
-                       date fechaAplicacion
-                       date proximaDosis
-                       varchar observaciones }
-    bitacora { int idBitacora PK
-               datetime fecha
-               varchar nivel
-               varchar nombreUsuario
-               varchar modulo
-               varchar mensaje
-               varchar detalle }
-```
+![Diagrama entidad–relación](diagramas/entidad_relacion.png)
 
 ## 6. Diccionario de datos
 
@@ -403,6 +260,7 @@ erDiagram
 - **Autorización:** al iniciar sesión se cargan los permisos del rol en `Sesion`. El menú solo muestra los
   módulos permitidos y los botones Nuevo/Guardar/Eliminar se deshabilitan si falta el permiso `*_GESTIONAR`.
 - **Inyección SQL:** todas las consultas usan `SqlParameter`.
+- **Validaciones de entrada:** la clase `Entrada` bloquea teclas no permitidas mientras se escribe (nombres solo con letras; teléfono y DUI solo con números y formato automático) y `Validaciones` revisa los datos al guardar (teléfono que inicia con 2, 6 o 7, DUI con formato correcto, longitudes mínimas, fechas coherentes).
 - **Interfaz:** formularios diseñados en el Diseñador de Windows Forms con una paleta turquesa, tarjetas redondeadas, pantalla de inicio con estadísticas, menú lateral con iconos que se contrae en ventanas angostas y campos que pasan de dos columnas a una según el ancho.
 - **Excepciones:** cada acción de la Vista está protegida con `try/catch`. `Mensajes.Error` traduce los códigos de
   `SqlException` (duplicados 2627/2601, integridad referencial 547, servidor inaccesible 53, BD inexistente 4060,
@@ -425,7 +283,7 @@ erDiagram
 | 8 | CRUD de todas las entidades | Propietarios, Mascotas, Citas, Consultas, Vacunas, Aplicaciones, Usuarios |
 | 9 | Excepciones | `try/catch` + `MessageBox` + `Logger` |
 | 10 | Interfaz de usuario | Formularios diseñados en el Designer con la misma estructura y colores; mensajes de validación claros |
-| 11 | Conexión a BD | `Conexion_DB/Conexion.cs` (cadena en `App.config`, `using`, parámetros) |
+| 11 | Conexión a BD | `Conexion_DB/Conexion.cs` (servidor y base configurables, conexiones con `using`, consultas con parámetros) |
 | 12 | Documentación | Este documento |
 
 ## 9. Manual rápido de uso
