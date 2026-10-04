@@ -23,6 +23,7 @@ namespace Vista.Propietarios
         private void frmPropietarios_Load(object sender, EventArgs e)
         {
             Responsive.Aplicar(tlpCampos, ClientSize.Width);
+            ConfigurarEntradas();
             CargarCombos();
 
             // Control de permisos: sin permiso de gestión solo se puede consultar
@@ -34,6 +35,15 @@ namespace Vista.Propietarios
 
             CargarDatos();
             Nuevo();
+        }
+
+        // Restricciones de escritura: bloquean letras o números según el campo
+        private void ConfigurarEntradas()
+        {
+            Entrada.SoloLetras(txtNombre);
+            Entrada.Dui(txtDui);
+            Entrada.Telefono(txtTelefono);
+            Entrada.SinEspacios(txtCorreo);
         }
 
         private void CargarCombos()
@@ -112,7 +122,7 @@ namespace Vista.Propietarios
 
         private bool Validar()
         {
-            if (Mensajes.Invalido(Validaciones.Requerido(txtNombre.Text, "Nombre completo"), txtNombre)) return false;
+            if (Mensajes.Invalido(Validaciones.Nombre(txtNombre.Text, "Nombre completo"), txtNombre)) return false;
             if (Mensajes.Invalido(Validaciones.Requerido(txtDui.Text, "DUI") ?? Validaciones.Dui(txtDui.Text), txtDui)) return false;
             if (Mensajes.Invalido(Validaciones.Requerido(txtTelefono.Text, "Teléfono") ?? Validaciones.Telefono(txtTelefono.Text), txtTelefono)) return false;
             if (Mensajes.Invalido(Validaciones.Correo(txtCorreo.Text), txtCorreo)) return false;

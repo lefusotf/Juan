@@ -23,6 +23,7 @@ namespace Vista.Vacunas
         private void frmAplicacionVacunas_Load(object sender, EventArgs e)
         {
             Responsive.Aplicar(tlpCampos, ClientSize.Width);
+            ConfigurarEntradas();
             CargarCombos();
 
             // Control de permisos: sin permiso de gestión solo se puede consultar
@@ -34,6 +35,12 @@ namespace Vista.Vacunas
 
             CargarDatos();
             Nuevo();
+        }
+
+        // Restricciones de escritura: bloquean letras o números según el campo
+        private void ConfigurarEntradas()
+        {
+            // (sin acciones)
         }
 
         private void CargarCombos()

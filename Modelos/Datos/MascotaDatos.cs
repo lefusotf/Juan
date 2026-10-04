@@ -44,6 +44,17 @@ namespace Modelos.Datos
 
         public static void Eliminar(int id)
         {
+            DataRow r = Conexion.Consultar(
+                "SELECT (SELECT COUNT(*) FROM cita WHERE idMascota=@id) AS citas, " +
+                "(SELECT COUNT(*) FROM consulta WHERE idMascota=@id) AS consultas, " +
+                "(SELECT COUNT(*) FROM aplicacionVacuna WHERE idMascota=@id) AS vacunas",
+                Conexion.P("@id", id)).Rows[0];
+            int citas = (int)r["citas"], consultas = (int)r["consultas"], vacunas = (int)r["vacunas"];
+            if (citas + consultas + vacunas > 0)
+                throw new System.InvalidOperationException("No se puede eliminar la mascota porque tiene historial: " +
+                    citas + " cita(s), " + consultas + " consulta(s) y " + vacunas +
+                    " vacuna(s) aplicada(s). Elimine primero esos registros.");
+
             Conexion.EjecutarNoQuery("DELETE FROM mascota WHERE idMascota=@id", Conexion.P("@id", id));
         }
     }

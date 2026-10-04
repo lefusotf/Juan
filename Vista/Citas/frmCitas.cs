@@ -23,6 +23,7 @@ namespace Vista.Citas
         private void frmCitas_Load(object sender, EventArgs e)
         {
             Responsive.Aplicar(tlpCampos, ClientSize.Width);
+            ConfigurarEntradas();
             CargarCombos();
 
             // Control de permisos: sin permiso de gestión solo se puede consultar
@@ -34,6 +35,12 @@ namespace Vista.Citas
 
             CargarDatos();
             Nuevo();
+        }
+
+        // Restricciones de escritura: bloquean letras o números según el campo
+        private void ConfigurarEntradas()
+        {
+            // (sin acciones)
         }
 
         private void CargarCombos()
@@ -132,7 +139,7 @@ namespace Vista.Citas
                 cboVeterinario.Focus();
                 return false;
             }
-            if (Mensajes.Invalido(Validaciones.Requerido(txtMotivo.Text, "Motivo"), txtMotivo)) return false;
+            if (Mensajes.Invalido(Validaciones.Minimo(txtMotivo.Text, 3, "Motivo"), txtMotivo)) return false;
 
             bool programada = cboEstado.SelectedItem.ToString() == "Programada";
             if (programada && _id == 0 && FechaSinSegundos() < DateTime.Now)

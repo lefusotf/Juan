@@ -18,14 +18,53 @@ namespace Vista.Comun
 
         public static string Dui(string valor)
         {
-            return Regex.IsMatch((valor ?? "").Trim(), @"^\d{8}-\d$")
-                ? null : "El DUI debe tener el formato 00000000-0.";
+            string v = (valor ?? "").Trim();
+            if (!Regex.IsMatch(v, @"^\d{8}-\d$")) return "El DUI debe tener 9 dígitos con el formato 00000000-0.";
+            if (v == "00000000-0") return "El DUI ingresado no es válido.";
+            return null;
         }
 
         public static string Telefono(string valor)
         {
-            return Regex.IsMatch((valor ?? "").Trim(), @"^\d{4}-?\d{4}$")
-                ? null : "El teléfono debe tener 8 dígitos (ejemplo 7890-1234).";
+            return Regex.IsMatch((valor ?? "").Trim(), @"^[267]\d{3}-?\d{4}$")
+                ? null : "El teléfono debe tener 8 dígitos y comenzar con 2, 6 o 7 (ejemplo 7890-1234).";
+        }
+
+        /// <summary>Nombre de persona o mascota: obligatorio, solo letras (sin números ni símbolos raros), mínimo 2 caracteres.</summary>
+        public static string Nombre(string valor, string campo)
+        {
+            string v = (valor ?? "").Trim();
+            if (v.Length == 0) return "El campo '" + campo + "' es obligatorio.";
+            if (v.Length < 2) return "El campo '" + campo + "' debe tener al menos 2 letras.";
+            if (!Regex.IsMatch(v, @"^\p{L}[\p{L} '.\-]*$"))
+                return "El campo '" + campo + "' solo puede contener letras, sin números ni símbolos.";
+            return null;
+        }
+
+        /// <summary>Igual que Nombre pero el campo es opcional.</summary>
+        public static string NombreOpcional(string valor, string campo)
+        {
+            return string.IsNullOrWhiteSpace(valor) ? null : Nombre(valor, campo);
+        }
+
+        /// <summary>Texto con letras, números, espacios, punto y guion (ej. nombre de vacuna).</summary>
+        public static string LetrasYNumeros(string valor, string campo)
+        {
+            string v = (valor ?? "").Trim();
+            if (v.Length == 0) return "El campo '" + campo + "' es obligatorio.";
+            if (v.Length < 2) return "El campo '" + campo + "' debe tener al menos 2 caracteres.";
+            if (!Regex.IsMatch(v, @"^[\p{L}\d][\p{L}\d .\-]*$"))
+                return "El campo '" + campo + "' solo puede contener letras, números, espacios, punto o guion.";
+            return null;
+        }
+
+        /// <summary>Texto libre obligatorio con una longitud mínima.</summary>
+        public static string Minimo(string valor, int minimo, string campo)
+        {
+            string v = (valor ?? "").Trim();
+            if (v.Length == 0) return "El campo '" + campo + "' es obligatorio.";
+            if (v.Length < minimo) return "El campo '" + campo + "' debe tener al menos " + minimo + " caracteres.";
+            return null;
         }
 
         /// <summary>El correo es opcional; si se escribe debe tener formato válido.</summary>

@@ -37,6 +37,11 @@ namespace Modelos.Datos
 
         public static void Eliminar(int id)
         {
+            int usos = (int)Conexion.Escalar("SELECT COUNT(*) FROM aplicacionVacuna WHERE idVacuna=@id", Conexion.P("@id", id));
+            if (usos > 0)
+                throw new System.InvalidOperationException("No se puede eliminar la vacuna porque ya fue aplicada " + usos +
+                    " vez/veces. Elimine primero esas aplicaciones.");
+
             Conexion.EjecutarNoQuery("DELETE FROM vacuna WHERE idVacuna=@id", Conexion.P("@id", id));
         }
     }

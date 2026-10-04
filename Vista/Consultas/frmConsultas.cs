@@ -23,6 +23,7 @@ namespace Vista.Consultas
         private void frmConsultas_Load(object sender, EventArgs e)
         {
             Responsive.Aplicar(tlpCampos, ClientSize.Width);
+            ConfigurarEntradas();
             CargarCombos();
 
             // Control de permisos: sin permiso de gestión solo se puede consultar
@@ -34,6 +35,12 @@ namespace Vista.Consultas
 
             CargarDatos();
             Nuevo();
+        }
+
+        // Restricciones de escritura: bloquean letras o números según el campo
+        private void ConfigurarEntradas()
+        {
+            // (sin acciones)
         }
 
         private void CargarCombos()
@@ -147,8 +154,8 @@ namespace Vista.Consultas
                 dtpFecha.Focus();
                 return false;
             }
-            if (Mensajes.Invalido(Validaciones.Requerido(txtMotivo.Text, "Motivo"), txtMotivo)) return false;
-            if (Mensajes.Invalido(Validaciones.Requerido(txtDiagnostico.Text, "Diagnóstico"), txtDiagnostico)) return false;
+            if (Mensajes.Invalido(Validaciones.Minimo(txtMotivo.Text, 3, "Motivo"), txtMotivo)) return false;
+            if (Mensajes.Invalido(Validaciones.Minimo(txtDiagnostico.Text, 5, "Diagnóstico"), txtDiagnostico)) return false;
             return true;
         }
 

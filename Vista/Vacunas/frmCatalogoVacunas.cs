@@ -23,6 +23,7 @@ namespace Vista.Vacunas
         private void frmCatalogoVacunas_Load(object sender, EventArgs e)
         {
             Responsive.Aplicar(tlpCampos, ClientSize.Width);
+            ConfigurarEntradas();
             CargarCombos();
 
             // Control de permisos: sin permiso de gestión solo se puede consultar
@@ -34,6 +35,13 @@ namespace Vista.Vacunas
 
             CargarDatos();
             Nuevo();
+        }
+
+        // Restricciones de escritura: bloquean letras o números según el campo
+        private void ConfigurarEntradas()
+        {
+            Entrada.LetrasYNumeros(txtNombre);
+            Entrada.SoloLetras(cboEspecie);
         }
 
         private void CargarCombos()
@@ -109,8 +117,8 @@ namespace Vista.Vacunas
 
         private bool Validar()
         {
-            if (Mensajes.Invalido(Validaciones.Requerido(txtNombre.Text, "Nombre"), txtNombre)) return false;
-            if (Mensajes.Invalido(Validaciones.Requerido(cboEspecie.Text, "Especie destino"), cboEspecie)) return false;
+            if (Mensajes.Invalido(Validaciones.LetrasYNumeros(txtNombre.Text, "Nombre"), txtNombre)) return false;
+            if (Mensajes.Invalido(Validaciones.Nombre(cboEspecie.Text, "Especie destino"), cboEspecie)) return false;
             return true;
         }
 

@@ -32,6 +32,11 @@ namespace Modelos.Datos
 
         public static void Eliminar(int id)
         {
+            int mascotas = (int)Conexion.Escalar("SELECT COUNT(*) FROM mascota WHERE idPropietario=@id", Conexion.P("@id", id));
+            if (mascotas > 0)
+                throw new System.InvalidOperationException("No se puede eliminar al propietario porque tiene " + mascotas +
+                    " mascota(s) registrada(s). Elimine o cambie de propietario primero a sus mascotas.");
+
             Conexion.EjecutarNoQuery("DELETE FROM propietario WHERE idPropietario=@id", Conexion.P("@id", id));
         }
     }

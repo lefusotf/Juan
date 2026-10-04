@@ -23,6 +23,7 @@ namespace Vista.Usuarios
         private void frmUsuarios_Load(object sender, EventArgs e)
         {
             Responsive.Aplicar(tlpCampos, ClientSize.Width);
+            ConfigurarEntradas();
             CargarCombos();
 
             // Control de permisos: sin permiso de gestión solo se puede consultar
@@ -34,6 +35,15 @@ namespace Vista.Usuarios
 
             CargarDatos();
             Nuevo();
+        }
+
+        // Restricciones de escritura: bloquean letras o números según el campo
+        private void ConfigurarEntradas()
+        {
+            Entrada.SoloLetras(txtNombre);
+            Entrada.Usuario(txtUsuario);
+            Entrada.SinEspacios(txtContrasena);
+            Entrada.SinEspacios(txtCorreo);
         }
 
         private void CargarCombos()
@@ -118,7 +128,7 @@ namespace Vista.Usuarios
 
         private bool Validar()
         {
-            if (Mensajes.Invalido(Validaciones.Requerido(txtNombre.Text, "Nombre completo"), txtNombre)) return false;
+            if (Mensajes.Invalido(Validaciones.Nombre(txtNombre.Text, "Nombre completo"), txtNombre)) return false;
             if (Mensajes.Invalido(Validaciones.NombreUsuario(txtUsuario.Text), txtUsuario)) return false;
             if (Mensajes.Invalido(Validaciones.Correo(txtCorreo.Text), txtCorreo)) return false;
 

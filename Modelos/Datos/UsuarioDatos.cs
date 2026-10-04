@@ -102,6 +102,15 @@ namespace Modelos.Datos
 
         public static void Eliminar(int idUsuario)
         {
+            DataRow r = Conexion.Consultar(
+                "SELECT (SELECT COUNT(*) FROM cita WHERE idVeterinario=@id OR idUsuarioRegistro=@id) AS citas, " +
+                "(SELECT COUNT(*) FROM consulta WHERE idVeterinario=@id) AS consultas, " +
+                "(SELECT COUNT(*) FROM aplicacionVacuna WHERE idVeterinario=@id) AS vacunas",
+                Conexion.P("@id", idUsuario)).Rows[0];
+            if ((int)r["citas"] + (int)r["consultas"] + (int)r["vacunas"] > 0)
+                throw new System.InvalidOperationException("No se puede eliminar al usuario porque tiene citas, consultas o vacunas " +
+                    "registradas a su nombre. Para que no pueda entrar al sistema, cambie su estado a Inactivo.");
+
             Conexion.EjecutarNoQuery("DELETE FROM usuario WHERE idUsuario=@id", Conexion.P("@id", idUsuario));
         }
     }
