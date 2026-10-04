@@ -1,5 +1,4 @@
 using System;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -12,13 +11,14 @@ namespace Modelos.Conexion_DB
     /// </summary>
     public static class Conexion
     {
-        private const string CadenaPorDefecto =
-            "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Veterinaria;Integrated Security=true;";
+        // ===== CAMBIE AQUÍ EL NOMBRE DE SU SERVIDOR =====
+        // Ejemplos: "(localdb)\\MSSQLLocalDB", ".\\SQLEXPRESS", "DESKTOP-ABC123\\SQLEXPRESS"
+        private static string servidor = "(localdb)\\MSSQLLocalDB";
+        private static string baseDeDatos = "Veterinaria";
 
         private static string ObtenerCadena()
         {
-            ConnectionStringSettings cfg = ConfigurationManager.ConnectionStrings["Veterinaria"];
-            return cfg != null ? cfg.ConnectionString : CadenaPorDefecto;
+            return $"Data Source={servidor};Initial Catalog={baseDeDatos};Integrated Security=true;";
         }
 
         public static SqlConnection Conectar()
