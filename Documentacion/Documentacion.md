@@ -293,3 +293,13 @@ y en la tabla `bitacora`.
 3. **Recepcionista:** Propietarios → Mascotas → Citas.
 4. **Veterinario:** Consultas médicas (historial) y Vacunas (aplicar y administrar catálogo).
 5. **Administrador:** Usuarios (crear personal y asignar rol), Roles y permisos, Bitácora y todos los módulos.
+
+## 10. Capturas del sistema
+
+**Roles y permisos (rol Administrador).** Desde esta pantalla el administrador asigna los permisos a cada rol; los cambios se guardan en las tablas `rol`, `permiso` y `rolPermiso`.
+
+![Pantalla de roles y permisos](capturas/roles_y_permisos.png)
+
+**Control de permisos por rol (usuario Veterinario).** El menú solo muestra los módulos permitidos y, en Mascotas, el veterinario tiene permiso de consulta pero no de gestión, por lo que el formulario y los botones aparecen deshabilitados.
+
+![Mascotas con el rol Veterinario (solo lectura)](capturas/mascotas_veterinario.png)
