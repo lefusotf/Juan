@@ -51,6 +51,8 @@ separación de capas, autenticación con contraseñas cifradas mediante **BCrypt
 de datos, manejo de excepciones con `try/catch` y `MessageBox`, y registro de actividades (*logging*) en archivo
 y en la tabla `bitacora`.
 
+La interfaz se construyó con Windows Forms (Microsoft, s. f.-a), los datos se almacenan en SQL Server (Microsoft, s. f.-b) y las contraseñas se protegen con BCrypt, un algoritmo de hash adaptativo diseñado para resistir ataques de fuerza bruta (Provos y Mazières, 1999), mediante la librería BCrypt.Net-Next (BcryptNet, s. f.). Los requisitos del proyecto provienen de la rúbrica de evaluación del módulo (Instituto Técnico Ricaldone, 2026).
+
 **Objetivo general:** digitalizar y centralizar la información clínica de la veterinaria.
 
 **Objetivos específicos:**
@@ -63,6 +65,8 @@ y en la tabla `bitacora`.
 ## 2. Levantamiento de requerimientos
 
 ### 2.1 Requerimientos funcionales
+
+La Tabla 1 resume los requerimientos funcionales identificados para el sistema.
 
 | Código | Requerimiento | Rol principal |
 |--------|---------------|---------------|
@@ -79,6 +83,8 @@ y en la tabla `bitacora`.
 | RF-11 | Consultar propietarios, mascotas y citas (solo lectura) | Veterinario |
 
 ### 2.2 Requerimientos no funcionales
+
+La Tabla 2 presenta los requerimientos no funcionales.
 
 | Código | Requerimiento |
 |--------|---------------|
@@ -101,6 +107,8 @@ y en la tabla `bitacora`.
 
 ## 3. Arquitectura del sistema
 
+El sistema se organiza en dos capas, Modelo y Vista, como se muestra en la Figura 1; la Tabla 3 describe la responsabilidad de cada carpeta.
+
 ![Arquitectura MV del sistema](diagramas/arquitectura.png)
 
 | Carpeta | Responsabilidad |
@@ -115,6 +123,8 @@ y en la tabla `bitacora`.
 
 ## 4. Diagrama de casos de uso
 
+La Figura 2 presenta los casos de uso del sistema y su relación con los tres actores, que se describen en la Tabla 4.
+
 ![Diagrama de casos de uso](diagramas/casos_de_uso.png)
 
 **Descripción de actores**
@@ -127,9 +137,13 @@ y en la tabla `bitacora`.
 
 ## 5. Diagrama entidad–relación
 
+La Figura 3 muestra el modelo entidad–relación de la base de datos *Veterinaria*.
+
 ![Diagrama entidad–relación](diagramas/entidad_relacion.png)
 
 ## 6. Diccionario de datos
+
+Las Tablas 5 a 15 describen cada una de las tablas de la base de datos.
 
 **rol** — Roles del sistema.
 
@@ -271,20 +285,22 @@ y en la tabla `bitacora`.
 
 ### 7.1 Control de acceso por rol
 
-El administrador asigna los permisos de cada rol desde la pantalla **Roles y permisos**; los cambios se guardan en las tablas `rol`, `permiso` y `rolPermiso` y se aplican en el siguiente inicio de sesión de los usuarios de ese rol.
+El administrador asigna los permisos de cada rol desde la pantalla **Roles y permisos** (Figura 4); los cambios se guardan en las tablas `rol`, `permiso` y `rolPermiso` y se aplican en el siguiente inicio de sesión de los usuarios de ese rol.
 
 ![Pantalla de roles y permisos (rol Administrador)](capturas/roles_y_permisos.png)
 
-El menú solo muestra los módulos permitidos y los botones se habilitan según el permiso. En la siguiente captura, el veterinario tiene permiso de consulta en Mascotas pero no de gestión, por lo que el formulario y los botones aparecen deshabilitados.
+El menú solo muestra los módulos permitidos y los botones se habilitan según el permiso. En la Figura 5, el veterinario tiene permiso de consulta en Mascotas pero no de gestión, por lo que el formulario y los botones aparecen deshabilitados.
 
 ![Mascotas con el rol Veterinario (solo lectura)](capturas/mascotas_veterinario.png)
 
 ## 8. Cumplimiento de la rúbrica
 
+La Tabla 16 relaciona cada criterio de la rúbrica (Instituto Técnico Ricaldone, 2026) con el componente del sistema que lo cumple.
+
 | # | Criterio | Dónde se cumple |
 |---|----------|-----------------|
 | 1 | Arquitectura MV | Proyectos `Modelos` y `Vista`; la Vista solo invoca clases de `Modelos.Datos` |
-| 2 | Estructura de carpetas | Capas por proyecto y carpetas por funcionalidad (ver sección 3) |
+| 2 | Estructura de carpetas | Capas por proyecto y carpetas por funcionalidad (véase la Tabla 3) |
 | 3 | Login con BCrypt | `Vista/Login/frmLogin.cs`, `UsuarioDatos.Autenticar`, `EncriptadorContrasena` |
 | 4 | Gestión de usuarios | `Vista/Usuarios/frmUsuarios.cs` (CRUD + rol) |
 | 5 | Roles y permisos | Tablas `rol`/`permiso`/`rolPermiso`, `Sesion.Tiene`, `frmRoles` |
@@ -306,27 +322,27 @@ El menú solo muestra los módulos permitidos y los botones se habilitan según 
 
 ### 9.2 Inicio de sesión
 
-Se ingresa el usuario y la contraseña. La contraseña se verifica con BCrypt y, tras 3 intentos fallidos, el sistema se cierra. Usuarios de prueba: `admin / Admin123*`, `dvera / Vet12345*` y `recep1 / Recep123*`.
+Se ingresa el usuario y la contraseña (Figura 6). La contraseña se verifica con BCrypt y, tras 3 intentos fallidos, el sistema se cierra. Usuarios de prueba: `admin / Admin123*`, `dvera / Vet12345*` y `recep1 / Recep123*`.
 
 ![Pantalla de inicio de sesión](capturas/login.png)
 
 ### 9.3 Pantalla de inicio
 
-Después de iniciar sesión se muestra el menú lateral (solo con los módulos permitidos para el rol) y un resumen con el total de propietarios, mascotas, citas programadas, consultas y vacunas aplicadas, junto con las próximas citas.
+Después de iniciar sesión se muestra el menú lateral (solo con los módulos permitidos para el rol) y un resumen con el total de propietarios, mascotas, citas programadas, consultas y vacunas aplicadas, junto con las próximas citas (Figura 7).
 
 ![Pantalla de inicio con estadísticas y próximas citas](capturas/inicio.png)
 
 ### 9.4 Recepcionista: propietarios, mascotas y citas
 
-**Propietarios.** Se registran con nombre (solo letras), DUI y teléfono (solo números, con formato automático) y correo opcional.
+**Propietarios.** Se registran con nombre (solo letras), DUI y teléfono (solo números, con formato automático) y correo opcional (Figura 8).
 
 ![Gestión de propietarios](capturas/propietarios.png)
 
-**Mascotas.** Cada mascota se asocia a un propietario y se registran su especie, raza, sexo, fecha de nacimiento, peso y color.
+**Mascotas.** Cada mascota se asocia a un propietario y se registran su especie, raza, sexo, fecha de nacimiento, peso y color (Figura 9).
 
 ![Gestión de mascotas](capturas/mascotas_admin.png)
 
-**Citas.** Se elige la mascota, el veterinario y la fecha y hora. El sistema no permite citas en el pasado ni dos citas del mismo veterinario a la misma hora.
+**Citas.** Se elige la mascota, el veterinario y la fecha y hora. El sistema no permite citas en el pasado ni dos citas del mismo veterinario a la misma hora (Figura 10).
 
 ![Gestión de citas médicas](capturas/citas.png)
 
@@ -336,4 +352,16 @@ En **Consultas médicas** se registra y actualiza el historial clínico de cada 
 
 ### 9.6 Administrador: personal y control general
 
-En **Usuarios** se crean los usuarios del personal y se les asigna un rol; en **Roles y permisos** se definen los permisos de cada rol (ver sección 7.1); y en **Bitácora** se consultan las actividades y errores registrados. El administrador también tiene acceso a todos los demás módulos.
+En **Usuarios** se crean los usuarios del personal y se les asigna un rol; en **Roles y permisos** se definen los permisos de cada rol (véase Control de acceso por rol); y en **Bitácora** se consultan las actividades y errores registrados. El administrador también tiene acceso a todos los demás módulos.
+
+## Referencias
+
+BcryptNet. (s. f.). *BCrypt.Net-Next* [Software]. GitHub. https://github.com/BcryptNet/bcrypt.net
+
+Instituto Técnico Ricaldone. (2026). *Instrumento para evaluación: Fase de ejecución. BTVDS-1.3 Diseño de aplicaciones multimedia* [Rúbrica de evaluación]. Instituto Técnico Ricaldone.
+
+Microsoft. (s. f.-a). *Desktop guide for WPF and Windows Forms on .NET*. Microsoft Learn. https://learn.microsoft.com/en-us/dotnet/desktop/
+
+Microsoft. (s. f.-b). *¿Qué es SQL Server?* Microsoft Learn. https://learn.microsoft.com/es-es/sql/sql-server/what-is-sql-server
+
+Provos, N. y Mazières, D. (1999). A future-adaptable password scheme. En *Proceedings of the 1999 USENIX Annual Technical Conference, FREENIX Track* (pp. 81-92). USENIX Association. https://www.usenix.org/conference/1999-usenix-annual-technical-conference/presentation/future-adaptable-password-scheme
