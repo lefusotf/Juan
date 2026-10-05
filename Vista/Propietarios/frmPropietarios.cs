@@ -40,6 +40,7 @@ namespace Vista.Propietarios
         // Restricciones de escritura: bloquean letras o números según el campo
         private void ConfigurarEntradas()
         {
+            txtBuscar.MaxLength = 60;
             Entrada.SoloLetras(txtNombre);
             Entrada.Dui(txtDui);
             Entrada.Telefono(txtTelefono);
@@ -122,10 +123,34 @@ namespace Vista.Propietarios
 
         private bool Validar()
         {
-            if (Mensajes.Invalido(Validaciones.Nombre(txtNombre.Text, "Nombre completo"), txtNombre)) return false;
+            if (Mensajes.Invalido(Validaciones.NombreCompleto(txtNombre.Text, "Nombre completo"), txtNombre)) return false;
             if (Mensajes.Invalido(Validaciones.Requerido(txtDui.Text, "DUI") ?? Validaciones.Dui(txtDui.Text), txtDui)) return false;
             if (Mensajes.Invalido(Validaciones.Requerido(txtTelefono.Text, "Teléfono") ?? Validaciones.Telefono(txtTelefono.Text), txtTelefono)) return false;
             if (Mensajes.Invalido(Validaciones.Correo(txtCorreo.Text), txtCorreo)) return false;
+            if (Mensajes.Invalido(Validaciones.LongitudMaxima(txtDireccion.Text, 250, "Dirección"), txtDireccion)) return false;
+
+            // No se permiten dos propietarios con el mismo DUI
+            try
+            {
+                if (PropietarioDatos.ExisteDui(txtDui.Text.Trim(), _id))
+                {
+                    Mensajes.Invalido("Ya existe un propietario registrado con ese DUI.", txtDui);
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Mensajes.Error(Modulo, ex, "guardar");
+                return false;
+            }
+
+            // El dígito verificador solo genera una advertencia: el usuario decide si continúa
+            if (!Validaciones.DuiDigitoVerificadorValido(txtDui.Text) &&
+                !Mensajes.Confirmar("El DUI no supera la verificación del dígito verificador.\n¿Desea guardarlo de todas formas?"))
+            {
+                txtDui.Focus();
+                return false;
+            }
             return true;
         }
 
@@ -134,11 +159,11 @@ namespace Vista.Propietarios
             Propietario p = new Propietario
             {
                 IdPropietario = _id,
-                Nombre = txtNombre.Text.Trim(),
-                Dui = txtDui.Text.Trim(),
-                Telefono = txtTelefono.Text.Trim(),
-                Correo = txtCorreo.Text.Trim(),
-                Direccion = txtDireccion.Text.Trim()
+                Nombre = Texto.Capitalizar(txtNombre.Text),
+                Dui = Texto.Limpiar(txtDui.Text),
+                Telefono = Texto.Limpiar(txtTelefono.Text),
+                Correo = Texto.Limpiar(txtCorreo.Text).ToLower(),
+                Direccion = Texto.Limpiar(txtDireccion.Text)
             };
             if (esNuevo) PropietarioDatos.Insertar(p); else PropietarioDatos.Actualizar(p);
         }

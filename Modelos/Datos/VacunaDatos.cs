@@ -19,6 +19,20 @@ namespace Modelos.Datos
             return Conexion.Consultar("SELECT idVacuna, nombre, intervaloDias FROM vacuna ORDER BY nombre");
         }
 
+        /// <summary>Indica si ya existe otra vacuna con ese nombre.</summary>
+        public static bool ExisteNombre(string nombre, int idExcluir)
+        {
+            return (int)Conexion.Escalar("SELECT COUNT(*) FROM vacuna WHERE nombre=@n AND idVacuna<>@id",
+                Conexion.P("@n", nombre), Conexion.P("@id", idExcluir)) > 0;
+        }
+
+        /// <summary>Especie a la que está destinada la vacuna.</summary>
+        public static string ObtenerEspecieDestino(int idVacuna)
+        {
+            object r = Conexion.Escalar("SELECT especieDestino FROM vacuna WHERE idVacuna=@id", Conexion.P("@id", idVacuna));
+            return r == null ? "" : r.ToString();
+        }
+
         public static void Insertar(Vacuna v)
         {
             Conexion.EjecutarNoQuery(

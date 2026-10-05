@@ -40,6 +40,7 @@ namespace Vista.Mascotas
         // Restricciones de escritura: bloquean letras o números según el campo
         private void ConfigurarEntradas()
         {
+            txtBuscar.MaxLength = 60;
             Entrada.SoloLetras(txtNombre);
             Entrada.SoloLetras(cboEspecie);
             Entrada.SoloLetras(txtRaza);
@@ -153,10 +154,41 @@ namespace Vista.Mascotas
             if (Mensajes.Invalido(Validaciones.Nombre(cboEspecie.Text, "Especie"), cboEspecie)) return false;
             if (Mensajes.Invalido(Validaciones.NombreOpcional(txtRaza.Text, "Raza"), txtRaza)) return false;
             if (Mensajes.Invalido(Validaciones.NombreOpcional(txtColor.Text, "Color"), txtColor)) return false;
-            if (dtpNacimiento.Checked && dtpNacimiento.Value.Date > DateTime.Today)
+
+            if (dtpNacimiento.Checked)
             {
-                Mensajes.Advertencia("La fecha de nacimiento no puede ser futura.");
-                dtpNacimiento.Focus();
+                if (dtpNacimiento.Value.Date > DateTime.Today)
+                {
+                    Mensajes.Invalido("La fecha de nacimiento no puede ser futura.", dtpNacimiento);
+                    return false;
+                }
+                if (dtpNacimiento.Value.Date < DateTime.Today.AddYears(-40))
+                {
+                    Mensajes.Invalido("La fecha de nacimiento no puede ser de hace más de 40 años.", dtpNacimiento);
+                    return false;
+                }
+            }
+
+            if (nudPeso.Value > 150 &&
+                !Mensajes.Confirmar("El peso ingresado (" + nudPeso.Value + " kg) es muy alto para una mascota.\n¿Es correcto?"))
+            {
+                nudPeso.Focus();
+                return false;
+            }
+
+            // Un propietario no puede tener dos mascotas con el mismo nombre
+            try
+            {
+                string nombre = Texto.Capitalizar(txtNombre.Text);
+                if (MascotaDatos.ExisteNombreEnPropietario(Convert.ToInt32(cboPropietario.SelectedValue), nombre, _id))
+                {
+                    Mensajes.Invalido("Este propietario ya tiene una mascota llamada '" + nombre + "'.", txtNombre);
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Mensajes.Error(Modulo, ex, "guardar");
                 return false;
             }
             return true;
@@ -168,13 +200,13 @@ namespace Vista.Mascotas
             {
                 IdMascota = _id,
                 IdPropietario = Convert.ToInt32(cboPropietario.SelectedValue),
-                Nombre = txtNombre.Text.Trim(),
-                Especie = cboEspecie.Text.Trim(),
-                Raza = txtRaza.Text.Trim(),
+                Nombre = Texto.Capitalizar(txtNombre.Text),
+                Especie = Texto.Capitalizar(cboEspecie.Text),
+                Raza = Texto.Capitalizar(txtRaza.Text),
                 Sexo = cboSexo.SelectedIndex == 0 ? "M" : "H",
                 FechaNacimiento = dtpNacimiento.Checked ? (DateTime?)dtpNacimiento.Value.Date : null,
                 Peso = nudPeso.Value > 0 ? (decimal?)nudPeso.Value : null,
-                Color = txtColor.Text.Trim()
+                Color = Texto.Capitalizar(txtColor.Text)
             };
             if (esNuevo) MascotaDatos.Insertar(m); else MascotaDatos.Actualizar(m);
         }

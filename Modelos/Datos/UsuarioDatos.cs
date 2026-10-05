@@ -57,6 +57,46 @@ namespace Modelos.Datos
                 "WHERE r.nombre = 'Veterinario' AND u.estado = 'Activo' ORDER BY u.nombreCompleto");
         }
 
+        public static bool ExisteNombreUsuario(string nombreUsuario, int idExcluir)
+        {
+            return (int)Conexion.Escalar("SELECT COUNT(*) FROM usuario WHERE nombreUsuario=@u AND idUsuario<>@id",
+                Conexion.P("@u", nombreUsuario), Conexion.P("@id", idExcluir)) > 0;
+        }
+
+        public static bool ExisteCorreo(string correo, int idExcluir)
+        {
+            return (int)Conexion.Escalar("SELECT COUNT(*) FROM usuario WHERE correo=@c AND idUsuario<>@id",
+                Conexion.P("@c", correo), Conexion.P("@id", idExcluir)) > 0;
+        }
+
+        /// <summary>
+        /// Regla de negocio: siempre debe quedar al menos un administrador activo. Lanza una excepción si la
+        /// operación (eliminar, desactivar o cambiar de rol) dejaría al sistema sin administradores.
+        /// </summary>
+        private static void ProtegerUltimoAdministrador(int idUsuario, int? nuevoIdRol, string nuevoEstado, bool eliminando)
+        {
+            DataTable t = Conexion.Consultar(
+                "SELECT u.estado, r.nombre FROM usuario u INNER JOIN rol r ON r.idRol = u.idRol WHERE u.idUsuario=@id",
+                Conexion.P("@id", idUsuario));
+            if (t.Rows.Count == 0) return;
+
+            bool eraAdminActivo = t.Rows[0]["nombre"].ToString() == "Administrador" && t.Rows[0]["estado"].ToString() == "Activo";
+            if (!eraAdminActivo) return;
+
+            if (!eliminando && nuevoIdRol.HasValue)
+            {
+                object nombreRol = Conexion.Escalar("SELECT nombre FROM rol WHERE idRol=@r", Conexion.P("@r", nuevoIdRol.Value));
+                if (nombreRol != null && nombreRol.ToString() == "Administrador" && nuevoEstado == "Activo") return;
+            }
+
+            int otros = (int)Conexion.Escalar(
+                "SELECT COUNT(*) FROM usuario u INNER JOIN rol r ON r.idRol = u.idRol " +
+                "WHERE r.nombre='Administrador' AND u.estado='Activo' AND u.idUsuario<>@id",
+                Conexion.P("@id", idUsuario));
+            if (otros == 0)
+                throw new System.InvalidOperationException("Debe existir al menos un administrador activo en el sistema.");
+        }
+
         public static void Insertar(Usuario u)
         {
             Conexion.EjecutarNoQuery(
@@ -73,6 +113,8 @@ namespace Modelos.Datos
         /// <summary>Actualiza al usuario. Si Contrasena viene vacía se conserva la actual.</summary>
         public static void Actualizar(Usuario u)
         {
+            ProtegerUltimoAdministrador(u.IdUsuario, u.IdRol, u.Estado, false);
+
             if (string.IsNullOrEmpty(u.Contrasena))
             {
                 Conexion.EjecutarNoQuery(
@@ -102,6 +144,8 @@ namespace Modelos.Datos
 
         public static void Eliminar(int idUsuario)
         {
+            ProtegerUltimoAdministrador(idUsuario, null, null, true);
+
             DataRow r = Conexion.Consultar(
                 "SELECT (SELECT COUNT(*) FROM cita WHERE idVeterinario=@id OR idUsuarioRegistro=@id) AS citas, " +
                 "(SELECT COUNT(*) FROM consulta WHERE idVeterinario=@id) AS consultas, " +

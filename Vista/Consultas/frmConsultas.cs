@@ -40,7 +40,7 @@ namespace Vista.Consultas
         // Restricciones de escritura: bloquean letras o números según el campo
         private void ConfigurarEntradas()
         {
-            // (sin acciones)
+            txtBuscar.MaxLength = 60;
         }
 
         private void CargarCombos()
@@ -150,12 +150,34 @@ namespace Vista.Consultas
             }
             if (dtpFecha.Value > DateTime.Now.AddMinutes(5))
             {
-                Mensajes.Advertencia("La fecha de la consulta no puede ser futura.");
-                dtpFecha.Focus();
+                Mensajes.Invalido("La fecha de la consulta no puede ser futura.", dtpFecha);
                 return false;
             }
             if (Mensajes.Invalido(Validaciones.Minimo(txtMotivo.Text, 3, "Motivo"), txtMotivo)) return false;
+            if (Mensajes.Invalido(Validaciones.LongitudMaxima(txtMotivo.Text, 250, "Motivo"), txtMotivo)) return false;
             if (Mensajes.Invalido(Validaciones.Minimo(txtDiagnostico.Text, 5, "Diagnóstico"), txtDiagnostico)) return false;
+            if (Mensajes.Invalido(Validaciones.LongitudMaxima(txtDiagnostico.Text, 500, "Diagnóstico"), txtDiagnostico)) return false;
+            if (!string.IsNullOrWhiteSpace(txtTratamiento.Text) &&
+                Mensajes.Invalido(Validaciones.Minimo(txtTratamiento.Text, 3, "Tratamiento"), txtTratamiento)) return false;
+            if (Mensajes.Invalido(Validaciones.LongitudMaxima(txtTratamiento.Text, 500, "Tratamiento"), txtTratamiento)) return false;
+            if (Mensajes.Invalido(Validaciones.LongitudMaxima(txtObservaciones.Text, 500, "Observaciones"), txtObservaciones)) return false;
+
+            // La consulta no puede ser anterior al nacimiento de la mascota
+            try
+            {
+                DataRow mascota = MascotaDatos.ObtenerBasico(Convert.ToInt32(cboMascota.SelectedValue));
+                if (mascota != null && mascota["fechaNacimiento"] is DateTime &&
+                    dtpFecha.Value.Date < (DateTime)mascota["fechaNacimiento"])
+                {
+                    Mensajes.Invalido("La fecha de la consulta no puede ser anterior al nacimiento de la mascota.", dtpFecha);
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Mensajes.Error(Modulo, ex, "guardar");
+                return false;
+            }
             return true;
         }
 
@@ -168,10 +190,10 @@ namespace Vista.Consultas
                 IdMascota = Convert.ToInt32(cboMascota.SelectedValue),
                 IdVeterinario = Convert.ToInt32(cboVeterinario.SelectedValue),
                 Fecha = new DateTime(v.Year, v.Month, v.Day, v.Hour, v.Minute, 0),
-                Motivo = txtMotivo.Text.Trim(),
-                Diagnostico = txtDiagnostico.Text.Trim(),
-                Tratamiento = txtTratamiento.Text.Trim(),
-                Observaciones = txtObservaciones.Text.Trim()
+                Motivo = Texto.PrimeraMayuscula(txtMotivo.Text),
+                Diagnostico = Texto.PrimeraMayuscula(txtDiagnostico.Text),
+                Tratamiento = Texto.PrimeraMayuscula(txtTratamiento.Text),
+                Observaciones = Texto.PrimeraMayuscula(txtObservaciones.Text)
             };
             if (esNuevo) ConsultaDatos.Insertar(c); else ConsultaDatos.Actualizar(c);
         }

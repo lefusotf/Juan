@@ -19,8 +19,19 @@ namespace Modelos.Datos
         public static bool VeterinarioOcupado(int idVeterinario, System.DateTime fechaHora, int idCitaExcluir)
         {
             object r = Conexion.Escalar(
-                "SELECT COUNT(*) FROM cita WHERE idVeterinario=@v AND fechaHora=@f AND estado='Programada' AND idCita<>@id",
+                "SELECT COUNT(*) FROM cita WHERE idVeterinario=@v AND ABS(DATEDIFF(MINUTE, fechaHora, @f)) < 30 " +
+                "AND estado='Programada' AND idCita<>@id",
                 Conexion.P("@v", idVeterinario), Conexion.P("@f", fechaHora), Conexion.P("@id", idCitaExcluir));
+            return (int)r > 0;
+        }
+
+        /// <summary>Indica si la mascota ya tiene otra cita programada ese mismo día.</summary>
+        public static bool MascotaTieneCitaEseDia(int idMascota, System.DateTime fechaHora, int idCitaExcluir)
+        {
+            object r = Conexion.Escalar(
+                "SELECT COUNT(*) FROM cita WHERE idMascota=@m AND estado='Programada' " +
+                "AND CAST(fechaHora AS DATE)=CAST(@f AS DATE) AND idCita<>@id",
+                Conexion.P("@m", idMascota), Conexion.P("@f", fechaHora), Conexion.P("@id", idCitaExcluir));
             return (int)r > 0;
         }
 

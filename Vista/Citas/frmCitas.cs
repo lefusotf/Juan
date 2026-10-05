@@ -40,7 +40,7 @@ namespace Vista.Citas
         // Restricciones de escritura: bloquean letras o números según el campo
         private void ConfigurarEntradas()
         {
-            // (sin acciones)
+            txtBuscar.MaxLength = 60;
         }
 
         private void CargarCombos()
@@ -140,22 +140,30 @@ namespace Vista.Citas
                 return false;
             }
             if (Mensajes.Invalido(Validaciones.Minimo(txtMotivo.Text, 3, "Motivo"), txtMotivo)) return false;
+            if (Mensajes.Invalido(Validaciones.LongitudMaxima(txtMotivo.Text, 250, "Motivo"), txtMotivo)) return false;
 
             bool programada = cboEstado.SelectedItem.ToString() == "Programada";
-            if (programada && _id == 0 && FechaSinSegundos() < DateTime.Now)
+            DateTime fecha = FechaSinSegundos();
+
+            if (programada && _id == 0 && fecha < DateTime.Now)
             {
-                Mensajes.Advertencia("La fecha y hora de una cita nueva no puede estar en el pasado.");
-                dtpFechaHora.Focus();
+                Mensajes.Invalido("La fecha y hora de una cita nueva no puede estar en el pasado.", dtpFechaHora);
                 return false;
             }
+            if (programada && Mensajes.Invalido(Validaciones.HorarioCita(fecha), dtpFechaHora)) return false;
+
             if (programada)
             {
                 try
                 {
-                    if (CitaDatos.VeterinarioOcupado(Convert.ToInt32(cboVeterinario.SelectedValue), FechaSinSegundos(), _id))
+                    if (CitaDatos.VeterinarioOcupado(Convert.ToInt32(cboVeterinario.SelectedValue), fecha, _id))
                     {
-                        Mensajes.Advertencia("El veterinario ya tiene una cita programada a esa fecha y hora.");
-                        dtpFechaHora.Focus();
+                        Mensajes.Invalido("El veterinario ya tiene una cita programada en ese horario (debe haber al menos 30 minutos entre citas).", dtpFechaHora);
+                        return false;
+                    }
+                    if (CitaDatos.MascotaTieneCitaEseDia(Convert.ToInt32(cboMascota.SelectedValue), fecha, _id))
+                    {
+                        Mensajes.Invalido("La mascota ya tiene una cita programada ese mismo día.", cboMascota);
                         return false;
                     }
                 }
@@ -176,7 +184,7 @@ namespace Vista.Citas
                 IdMascota = Convert.ToInt32(cboMascota.SelectedValue),
                 IdVeterinario = Convert.ToInt32(cboVeterinario.SelectedValue),
                 FechaHora = FechaSinSegundos(),
-                Motivo = txtMotivo.Text.Trim(),
+                Motivo = Texto.PrimeraMayuscula(txtMotivo.Text),
                 Estado = cboEstado.SelectedItem.ToString(),
                 IdUsuarioRegistro = Sesion.UsuarioActual.IdUsuario
             };

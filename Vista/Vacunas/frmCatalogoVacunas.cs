@@ -40,6 +40,7 @@ namespace Vista.Vacunas
         // Restricciones de escritura: bloquean letras o números según el campo
         private void ConfigurarEntradas()
         {
+            txtBuscar.MaxLength = 60;
             Entrada.LetrasYNumeros(txtNombre);
             Entrada.SoloLetras(cboEspecie);
         }
@@ -119,6 +120,22 @@ namespace Vista.Vacunas
         {
             if (Mensajes.Invalido(Validaciones.LetrasYNumeros(txtNombre.Text, "Nombre"), txtNombre)) return false;
             if (Mensajes.Invalido(Validaciones.Nombre(cboEspecie.Text, "Especie destino"), cboEspecie)) return false;
+            if (Mensajes.Invalido(Validaciones.LongitudMaxima(txtDescripcion.Text, 250, "Descripción"), txtDescripcion)) return false;
+
+            // No se permiten dos vacunas con el mismo nombre
+            try
+            {
+                if (VacunaDatos.ExisteNombre(Texto.Limpiar(txtNombre.Text), _id))
+                {
+                    Mensajes.Invalido("Ya existe una vacuna con ese nombre en el catálogo.", txtNombre);
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Mensajes.Error(Modulo, ex, "guardar");
+                return false;
+            }
             return true;
         }
 
@@ -127,10 +144,10 @@ namespace Vista.Vacunas
             Vacuna v = new Vacuna
             {
                 IdVacuna = _id,
-                Nombre = txtNombre.Text.Trim(),
-                EspecieDestino = cboEspecie.Text.Trim(),
+                Nombre = Texto.Limpiar(txtNombre.Text),
+                EspecieDestino = Texto.Limpiar(cboEspecie.Text),
                 IntervaloDias = (int)nudIntervalo.Value,
-                Descripcion = txtDescripcion.Text.Trim()
+                Descripcion = Texto.PrimeraMayuscula(txtDescripcion.Text)
             };
             if (esNuevo) VacunaDatos.Insertar(v); else VacunaDatos.Actualizar(v);
         }

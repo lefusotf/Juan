@@ -22,6 +22,22 @@ namespace Modelos.Datos
                 "SELECT idMascota, nombre + ' (' + propietario + ')' AS descripcion FROM vw_MascotasDetalle ORDER BY nombre");
         }
 
+        /// <summary>Indica si el propietario ya tiene otra mascota con ese nombre.</summary>
+        public static bool ExisteNombreEnPropietario(int idPropietario, string nombre, int idExcluir)
+        {
+            return (int)Conexion.Escalar(
+                "SELECT COUNT(*) FROM mascota WHERE idPropietario=@p AND nombre=@n AND idMascota<>@id",
+                Conexion.P("@p", idPropietario), Conexion.P("@n", nombre), Conexion.P("@id", idExcluir)) > 0;
+        }
+
+        /// <summary>Devuelve la especie y la fecha de nacimiento de la mascota (o null si no existe).</summary>
+        public static DataRow ObtenerBasico(int idMascota)
+        {
+            DataTable t = Conexion.Consultar("SELECT especie, fechaNacimiento FROM mascota WHERE idMascota=@id",
+                Conexion.P("@id", idMascota));
+            return t.Rows.Count == 0 ? null : t.Rows[0];
+        }
+
         public static void Insertar(Mascota m)
         {
             Conexion.EjecutarNoQuery(

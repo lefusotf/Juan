@@ -15,6 +15,14 @@ namespace Modelos.Datos
                 Conexion.P("@f", "%" + (filtro ?? "") + "%"));
         }
 
+        /// <summary>Indica si ya se registró la misma vacuna a la misma mascota en la misma fecha.</summary>
+        public static bool ExisteAplicacion(int idMascota, int idVacuna, System.DateTime fecha, int idExcluir)
+        {
+            return (int)Conexion.Escalar(
+                "SELECT COUNT(*) FROM aplicacionVacuna WHERE idMascota=@m AND idVacuna=@v AND fechaAplicacion=@f AND idAplicacion<>@id",
+                Conexion.P("@m", idMascota), Conexion.P("@v", idVacuna), Conexion.P("@f", fecha.Date), Conexion.P("@id", idExcluir)) > 0;
+        }
+
         public static void Insertar(AplicacionVacuna a)
         {
             Conexion.EjecutarNoQuery(

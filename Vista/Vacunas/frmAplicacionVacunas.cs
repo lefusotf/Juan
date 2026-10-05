@@ -40,7 +40,7 @@ namespace Vista.Vacunas
         // Restricciones de escritura: bloquean letras o números según el campo
         private void ConfigurarEntradas()
         {
-            // (sin acciones)
+            txtBuscar.MaxLength = 60;
         }
 
         private void CargarCombos()
@@ -158,14 +158,46 @@ namespace Vista.Vacunas
             }
             if (dtpAplicacion.Value.Date > DateTime.Today)
             {
-                Mensajes.Advertencia("La fecha de aplicación no puede ser futura.");
-                dtpAplicacion.Focus();
+                Mensajes.Invalido("La fecha de aplicación no puede ser futura.", dtpAplicacion);
                 return false;
             }
             if (dtpProxima.Checked && dtpProxima.Value.Date <= dtpAplicacion.Value.Date)
             {
-                Mensajes.Advertencia("La próxima dosis debe ser posterior a la fecha de aplicación.");
-                dtpProxima.Focus();
+                Mensajes.Invalido("La próxima dosis debe ser posterior a la fecha de aplicación.", dtpProxima);
+                return false;
+            }
+            if (Mensajes.Invalido(Validaciones.LongitudMaxima(txtObservaciones.Text, 250, "Observaciones"), txtObservaciones)) return false;
+
+            int idMascota = Convert.ToInt32(cboMascota.SelectedValue);
+            int idVacuna = Convert.ToInt32(cboVacuna.SelectedValue);
+            try
+            {
+                DataRow mascota = MascotaDatos.ObtenerBasico(idMascota);
+                string especieVacuna = VacunaDatos.ObtenerEspecieDestino(idVacuna);
+                if (mascota != null)
+                {
+                    // La vacuna debe corresponder a la especie de la mascota
+                    if (!string.Equals(mascota["especie"].ToString(), especieVacuna, StringComparison.OrdinalIgnoreCase))
+                    {
+                        Mensajes.Invalido("La vacuna '" + cboVacuna.Text + "' es para " + especieVacuna +
+                                          " y la mascota es de especie " + mascota["especie"] + ".", cboVacuna);
+                        return false;
+                    }
+                    if (mascota["fechaNacimiento"] is DateTime && dtpAplicacion.Value.Date < (DateTime)mascota["fechaNacimiento"])
+                    {
+                        Mensajes.Invalido("La fecha de aplicación no puede ser anterior al nacimiento de la mascota.", dtpAplicacion);
+                        return false;
+                    }
+                }
+                if (AplicacionVacunaDatos.ExisteAplicacion(idMascota, idVacuna, dtpAplicacion.Value, _id))
+                {
+                    Mensajes.Invalido("Esa vacuna ya fue registrada para esta mascota en la misma fecha.", dtpAplicacion);
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Mensajes.Error(Modulo, ex, "guardar");
                 return false;
             }
             return true;
@@ -181,7 +213,7 @@ namespace Vista.Vacunas
                 IdVeterinario = Convert.ToInt32(cboVeterinario.SelectedValue),
                 FechaAplicacion = dtpAplicacion.Value.Date,
                 ProximaDosis = dtpProxima.Checked ? (DateTime?)dtpProxima.Value.Date : null,
-                Observaciones = txtObservaciones.Text.Trim()
+                Observaciones = Texto.PrimeraMayuscula(txtObservaciones.Text)
             };
             if (esNuevo) AplicacionVacunaDatos.Insertar(a); else AplicacionVacunaDatos.Actualizar(a);
         }

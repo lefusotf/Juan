@@ -40,6 +40,7 @@ namespace Vista.Usuarios
         // Restricciones de escritura: bloquean letras o números según el campo
         private void ConfigurarEntradas()
         {
+            txtBuscar.MaxLength = 60;
             Entrada.SoloLetras(txtNombre);
             Entrada.Usuario(txtUsuario);
             Entrada.SinEspacios(txtContrasena);
@@ -128,7 +129,7 @@ namespace Vista.Usuarios
 
         private bool Validar()
         {
-            if (Mensajes.Invalido(Validaciones.Nombre(txtNombre.Text, "Nombre completo"), txtNombre)) return false;
+            if (Mensajes.Invalido(Validaciones.NombreCompleto(txtNombre.Text, "Nombre completo"), txtNombre)) return false;
             if (Mensajes.Invalido(Validaciones.NombreUsuario(txtUsuario.Text), txtUsuario)) return false;
             if (Mensajes.Invalido(Validaciones.Correo(txtCorreo.Text), txtCorreo)) return false;
 
@@ -141,7 +142,7 @@ namespace Vista.Usuarios
 
             bool esNuevo = _id == 0;
             if (esNuevo || txtContrasena.Text.Length > 0)
-                if (Mensajes.Invalido(Validaciones.Contrasena(txtContrasena.Text), txtContrasena)) return false;
+                if (Mensajes.Invalido(Validaciones.Contrasena(txtContrasena.Text, txtUsuario.Text), txtContrasena)) return false;
 
             // Evitar que el administrador se bloquee a sí mismo
             if (!esNuevo && _id == Sesion.UsuarioActual.IdUsuario)
@@ -157,6 +158,26 @@ namespace Vista.Usuarios
                     return false;
                 }
             }
+
+            // Usuario y correo no pueden repetirse
+            try
+            {
+                if (UsuarioDatos.ExisteNombreUsuario(txtUsuario.Text.Trim(), _id))
+                {
+                    Mensajes.Invalido("El nombre de usuario ya está en uso. Elija otro.", txtUsuario);
+                    return false;
+                }
+                if (!string.IsNullOrWhiteSpace(txtCorreo.Text) && UsuarioDatos.ExisteCorreo(txtCorreo.Text.Trim(), _id))
+                {
+                    Mensajes.Invalido("Ya existe otro usuario con ese correo electrónico.", txtCorreo);
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Mensajes.Error(Modulo, ex, "guardar");
+                return false;
+            }
             return true;
         }
 
@@ -165,10 +186,10 @@ namespace Vista.Usuarios
             Usuario u = new Usuario
             {
                 IdUsuario = _id,
-                NombreCompleto = txtNombre.Text.Trim(),
-                NombreUsuario = txtUsuario.Text.Trim(),
+                NombreCompleto = Texto.Capitalizar(txtNombre.Text),
+                NombreUsuario = Texto.Limpiar(txtUsuario.Text),
                 Contrasena = txtContrasena.Text,
-                Correo = txtCorreo.Text.Trim(),
+                Correo = Texto.Limpiar(txtCorreo.Text).ToLower(),
                 IdRol = Convert.ToInt32(cboRol.SelectedValue),
                 Estado = cboEstado.SelectedItem.ToString()
             };

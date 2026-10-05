@@ -14,6 +14,13 @@ namespace Modelos.Datos
                 Conexion.P("@f", "%" + (filtro ?? "") + "%"));
         }
 
+        /// <summary>Indica si ya existe otro propietario con ese DUI.</summary>
+        public static bool ExisteDui(string dui, int idExcluir)
+        {
+            return (int)Conexion.Escalar("SELECT COUNT(*) FROM propietario WHERE dui=@d AND idPropietario<>@id",
+                Conexion.P("@d", dui), Conexion.P("@id", idExcluir)) > 0;
+        }
+
         public static void Insertar(Propietario p)
         {
             Conexion.EjecutarNoQuery(

@@ -20,13 +20,45 @@ namespace Vista.Comun
             MessageBox.Show(mensaje, Titulo, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
-        /// <summary>Muestra la advertencia y enfoca el control si hay error de validación. Devuelve true si hubo error.</summary>
+        private static readonly System.Collections.Generic.Dictionary<Form, ErrorProvider> Proveedores =
+            new System.Collections.Generic.Dictionary<Form, ErrorProvider>();
+
+        /// <summary>
+        /// Muestra la advertencia, enfoca el control y marca el campo con un icono rojo hasta que el usuario lo corrija.
+        /// Devuelve true si hubo error de validación.
+        /// </summary>
         public static bool Invalido(string error, Control foco)
         {
             if (error == null) return false;
+            MarcarCampo(error, foco);
             Advertencia(error);
             if (foco != null) foco.Focus();
             return true;
+        }
+
+        private static void MarcarCampo(string error, Control foco)
+        {
+            if (foco == null) return;
+            Form formulario = foco.FindForm();
+            if (formulario == null) return;
+
+            ErrorProvider proveedor;
+            if (!Proveedores.TryGetValue(formulario, out proveedor))
+            {
+                proveedor = new ErrorProvider { BlinkStyle = ErrorBlinkStyle.NeverBlink };
+                Proveedores[formulario] = proveedor;
+                formulario.FormClosed += (s, e) => Proveedores.Remove(formulario);
+            }
+            proveedor.SetError(foco, error);
+
+            // El icono desaparece en cuanto el usuario modifica el campo
+            EventHandler limpiar = null;
+            limpiar = (s, e) =>
+            {
+                proveedor.SetError(foco, "");
+                foco.TextChanged -= limpiar;
+            };
+            foco.TextChanged += limpiar;
         }
 
         public static bool Confirmar(string pregunta)
