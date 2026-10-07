@@ -7,13 +7,12 @@ vacunas, propietarios y citas médicas.
 
 ## Cómo ejecutarlo
 
-1. Abra **SQL Server Management Studio** (o Visual Studio → Explorador de objetos de SQL Server) conectado a
-   `(localdb)\MSSQLLocalDB` y ejecute **una sola vez** el script `BaseDatos/Veterinaria.sql`.
-   (Para reiniciar los datos: `DROP DATABASE Veterinaria;` y volver a ejecutar el script).
+1. Abra **SQL Server Management Studio** conectado a su instancia y ejecute **una sola vez** el script
+   `BaseDatos/Veterinaria.sql`. (Para reiniciar los datos: `DROP DATABASE Veterinaria;` y volver a ejecutarlo).
 2. Abra `Veterinaria.sln` con Visual Studio 2022 (carga de trabajo *Desarrollo de escritorio con .NET*).
    Al compilar, NuGet restaura automáticamente **BCrypt.Net-Next**.
-3. Establezca **Vista** como proyecto de inicio y presione F5.
-4. Si usa otra instancia de SQL Server, cambie `Data Source` en `Vista/App.config`.
+3. Establezca **dashboardVet** como proyecto de inicio y presione F5.
+4. Si su servidor de SQL Server se llama distinto, cambie la constante `Servidor` en `Modelos/Conexion.cs`.
 
 ## Usuarios de prueba
 
@@ -23,23 +22,28 @@ vacunas, propietarios y citas médicas.
 | Veterinario   | `dvera`  | `Vet12345*` |
 | Recepcionista | `recep1` | `Recep123*` |
 
-## Estructura
+## Estructura (misma organización que el proyecto de referencia)
 
 ```
 Veterinaria.sln
-├── BaseDatos/Veterinaria.sql      Script de BD (roles, permisos, usuarios, entidades, vistas, datos)
-├── Modelos/                       CAPA MODELO (sin formularios)
-│   ├── Conexion_DB/               Conexión y helpers parametrizados
-│   ├── Entidades/                 Clases de dominio
-│   ├── Datos/                     Acceso a datos (CRUD) por entidad
-│   ├── Seguridad/                 BCrypt, sesión y códigos de permiso
-│   └── Utilidades/                Logger (archivo + tabla bitácora)
-├── Vista/                         CAPA VISTA (Windows Forms; cada formulario tiene .cs + .Designer.cs)
-│   ├── Comun/                     Tema, controles propios (BotonModerno, BotonMenu, PanelTarjeta, PanelDegradado),
-│   │                              diseño adaptable (Responsive), Mensajes (MessageBox), validaciones
-│   ├── Login/  Dashboard/  Usuarios/  Propietarios/  Mascotas/
-│   └── Citas/  Consultas/  Vacunas/  Bitacora/
-└── Documentacion/Documentacion.md Portada, índice, introducción, casos de uso, ER y diccionario de datos
+├── BaseDatos/Veterinaria.sql     Script de BD (roles, permisos, usuarios, tablas, vistas, datos)
+├── Modelos/                      CAPA MODELO (namespace único Modelos, sin formularios)
+│   ├── Conexion.cs               ObtenerConexion()
+│   ├── ErroresSistema.cs         CatalogoErrores, ErrorInfo y AppException
+│   ├── DALBase.cs                Consultas parametrizadas y traducción de SqlException a AppException
+│   ├── *DAL.cs                   Propietario, Mascota, Cita, Consulta, Vacuna, AplicacionVacuna, Usuario,
+│   │                             Rol, Permisos, Login, Bitacora y Dashboard
+│   ├── Sesion.cs                 Sesión, UsuarioSesion y códigos de permiso
+│   ├── EncriptadorContrasena.cs  BCrypt
+│   └── Logger.cs                 Archivo diario + tabla bitácora
+└── dashboardVet/                 CAPA VISTA (Windows Forms; cada pantalla en su carpeta: .cs + .Designer.cs)
+    ├── Program.cs                Arranque, manejo global de excepciones y bucle de sesión
+    ├── ManejadorUIErrores.cs     Mensajes de error por código y tooltips automáticos
+    ├── Base/FrmBase.cs           Formulario base de todas las pantallas
+    ├── Helpers/                  Tema, Responsive, Mensajes, Validaciones, Entrada, Texto, GridUtil
+    ├── Controles/                BotonModerno, BotonMenu, PanelTarjeta, PanelDegradado
+    └── Login/ DashBoard/ Inicio/ Propietarios/ Mascotas/ Citas/ Consultas/
+        Vacunas/ CatalogoVacunas/ AplicacionVacunas/ Usuarios/ Roles/ Bitacora/
 ```
 
 ## Permisos por rol

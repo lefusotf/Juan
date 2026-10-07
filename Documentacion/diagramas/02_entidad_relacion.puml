@@ -1,0 +1,128 @@
+@startuml entidad_relacion
+hide circle
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+
+entity "rol" as rol {
+  *idRol : INT <<PK>>
+  --
+  *nombre : VARCHAR(50) <<UQ>>
+  descripcion : VARCHAR(200)
+}
+
+entity "permiso" as permiso {
+  *idPermiso : INT <<PK>>
+  --
+  *codigo : VARCHAR(50) <<UQ>>
+  *descripcion : VARCHAR(200)
+}
+
+entity "rolPermiso" as rolPermiso {
+  *idRol : INT <<PK,FK>>
+  *idPermiso : INT <<PK,FK>>
+}
+
+entity "usuario" as usuario {
+  *idUsuario : INT <<PK>>
+  --
+  *nombreCompleto : VARCHAR(150)
+  *nombreUsuario : VARCHAR(50) <<UQ>>
+  *contrasena : VARCHAR(100)
+  correo : VARCHAR(150)
+  *idRol : INT <<FK>>
+  *estado : VARCHAR(20)
+  *fechaCreacion : DATETIME
+}
+
+entity "propietario" as propietario {
+  *idPropietario : INT <<PK>>
+  --
+  *nombre : VARCHAR(150)
+  *dui : VARCHAR(10) <<UQ>>
+  *telefono : VARCHAR(15)
+  correo : VARCHAR(150)
+  direccion : VARCHAR(250)
+  *fechaRegistro : DATETIME
+}
+
+entity "mascota" as mascota {
+  *idMascota : INT <<PK>>
+  --
+  *idPropietario : INT <<FK>>
+  *nombre : VARCHAR(100)
+  *especie : VARCHAR(50)
+  raza : VARCHAR(80)
+  *sexo : CHAR(1)
+  fechaNacimiento : DATE
+  peso : DECIMAL(6,2)
+  color : VARCHAR(50)
+  *fechaRegistro : DATETIME
+}
+
+entity "vacuna" as vacuna {
+  *idVacuna : INT <<PK>>
+  --
+  *nombre : VARCHAR(100) <<UQ>>
+  descripcion : VARCHAR(250)
+  *especieDestino : VARCHAR(50)
+  *intervaloDias : INT
+}
+
+entity "cita" as cita {
+  *idCita : INT <<PK>>
+  --
+  *idMascota : INT <<FK>>
+  *idVeterinario : INT <<FK>>
+  *fechaHora : DATETIME
+  *motivo : VARCHAR(250)
+  *estado : VARCHAR(20)
+  *idUsuarioRegistro : INT <<FK>>
+}
+
+entity "consulta" as consulta {
+  *idConsulta : INT <<PK>>
+  --
+  *idMascota : INT <<FK>>
+  *idVeterinario : INT <<FK>>
+  *fecha : DATETIME
+  *motivo : VARCHAR(250)
+  *diagnostico : VARCHAR(500)
+  tratamiento : VARCHAR(500)
+  observaciones : VARCHAR(500)
+}
+
+entity "aplicacionVacuna" as aplicacionVacuna {
+  *idAplicacion : INT <<PK>>
+  --
+  *idMascota : INT <<FK>>
+  *idVacuna : INT <<FK>>
+  *idVeterinario : INT <<FK>>
+  *fechaAplicacion : DATE
+  proximaDosis : DATE
+  observaciones : VARCHAR(250)
+}
+
+entity "bitacora" as bitacora {
+  *idBitacora : INT <<PK>>
+  --
+  *fecha : DATETIME
+  *nivel : VARCHAR(10)
+  nombreUsuario : VARCHAR(50)
+  *modulo : VARCHAR(50)
+  *mensaje : VARCHAR(500)
+  detalle : VARCHAR(MAX)
+}
+
+rol ||--o{ rolPermiso
+permiso ||--o{ rolPermiso
+rol ||--o{ usuario : "tiene"
+propietario ||--o{ mascota : "posee"
+mascota ||--o{ cita
+mascota ||--o{ consulta
+mascota ||--o{ aplicacionVacuna
+vacuna ||--o{ aplicacionVacuna
+usuario ||--o{ cita : "atiende"
+usuario ||--o{ cita : "registra"
+usuario ||--o{ consulta : "realiza"
+usuario ||--o{ aplicacionVacuna : "aplica"
+@enduml

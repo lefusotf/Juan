@@ -1,0 +1,66 @@
+@startuml arquitectura
+skinparam componentStyle rectangle
+left to right direction
+
+package "dashboardVet (Vista)" {
+  component "Program" as Program
+  component "Base\nFrmBase" as FrmBase
+  component "Helpers\nTema, Responsive, Mensajes,\nValidaciones, Entrada, Texto, GridUtil" as Helpers
+  component "Controles\nBotonModerno, BotonMenu,\nPanelTarjeta, PanelDegradado" as Controles
+  component "ManejadorUIErrores" as MUI
+  package "Pantallas" {
+    component "Login" as Login
+    component "DashBoard / Inicio" as Dash
+    component "Propietarios" as Prop
+    component "Mascotas" as Masc
+    component "Citas" as Citas
+    component "Consultas" as Cons
+    component "Vacunas / CatalogoVacunas /\nAplicacionVacunas" as Vac
+    component "Usuarios" as Usu
+    component "Roles" as Roles
+    component "Bitacora" as Bit
+  }
+}
+
+package "Modelos (Datos y seguridad)" {
+  component "DALBase" as DALBase
+  component "PropietarioDAL\nMascotaDAL\nCitaDAL\nConsultaDAL\nVacunaDAL\nAplicacionVacunaDAL" as DALs
+  component "UsuarioDAL\nRolDAL\nPermisosDAL\nLoginDAL\nBitacoraDAL\nDashboardDAL" as DALs2
+  component "Conexion" as Conexion
+  component "ErroresSistema\nCatalogoErrores / AppException" as Errores
+  component "Sesion / Permisos" as Sesion
+  component "EncriptadorContrasena\n(BCrypt)" as Bcrypt
+  component "Logger" as Logger
+}
+
+database "SQL Server\nBD Veterinaria" as BD
+
+Program --> Login
+Program --> Dash
+Dash --> Prop
+Dash --> Masc
+Dash --> Citas
+Dash --> Cons
+Dash --> Vac
+Dash --> Usu
+Dash --> Roles
+Dash --> Bit
+
+Pantallas ..> FrmBase : hereda
+Pantallas ..> Helpers
+Pantallas ..> Controles
+Pantallas ..> MUI : errores
+Pantallas --> DALs
+Pantallas --> DALs2
+Pantallas --> Sesion
+
+DALs --|> DALBase
+DALs2 --|> DALBase
+DALBase --> Conexion
+DALBase ..> Errores : lanza AppException
+DALs2 --> Bcrypt
+MUI --> Errores
+MUI --> Logger
+Logger --> Conexion
+Conexion --> BD
+@enduml

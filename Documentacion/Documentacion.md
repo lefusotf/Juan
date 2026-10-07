@@ -107,19 +107,20 @@ La Tabla 2 presenta los requerimientos no funcionales.
 
 ## 3. Arquitectura del sistema
 
-El sistema se organiza en dos capas, Modelo y Vista, como se muestra en la Figura 1; la Tabla 3 describe la responsabilidad de cada carpeta.
+El sistema se organiza en dos proyectos, `Modelos` y `dashboardVet` (la Vista), como se muestra en la Figura 1; la Tabla 3 describe la responsabilidad de cada carpeta. La estructura sigue la del proyecto de referencia de planillas: clases `*DAL` con conexión por instancia, catálogo de errores con `AppException`, formulario base `FrmBase` y una carpeta por pantalla.
 
 ![Arquitectura MV del sistema](diagramas/arquitectura.png)
 
 | Carpeta | Responsabilidad |
 |---------|-----------------|
-| `Modelos/Conexion_DB` | Conexión a SQL Server (servidor y base de datos definidos en la clase `Conexion`) y métodos parametrizados |
-| `Modelos/Entidades` | Clases de dominio (Usuario, Propietario, Mascota, Cita, Consulta, Vacuna...) |
-| `Modelos/Datos` | Operaciones CRUD por entidad (únicas con SQL) |
-| `Modelos/Seguridad` | Cifrado BCrypt, sesión actual y códigos de permisos |
-| `Modelos/Utilidades` | `Logger` (archivo + bitácora) |
-| `Vista/Comun` | `Tema` (paleta), controles propios (`BotonModerno`, `BotonMenu`, `PanelTarjeta`, `PanelDegradado`), `Responsive` (diseño adaptable), `Mensajes` (MessageBox y errores SQL), `Validaciones`, `GridUtil` |
-| `Vista/<Módulo>` | Formularios agrupados por funcionalidad; cada uno con su `.cs` (lógica) y su `.Designer.cs` (diseño visual) |
+| `Modelos` (espacio de nombres único) | Capa de datos. `Conexion` entrega la conexión a SQL Server; `DALBase` ejecuta consultas parametrizadas y traduce `SqlException` a `AppException`; cada tabla tiene su clase `*DAL` (`PropietarioDAL`, `MascotaDAL`, `CitaDAL`, `ConsultaDAL`, `VacunaDAL`, `AplicacionVacunaDAL`, `UsuarioDAL`, `RolDAL`, `PermisosDAL`, `LoginDAL`, `BitacoraDAL`, `DashboardDAL`) |
+| `Modelos/ErroresSistema.cs` | `CatalogoErrores` (códigos `ERR-SQL`, `ERR-VAL`, `ERR-NEG` y `ERR-GEN` con su mensaje), `ErrorInfo` y `AppException` |
+| `Modelos/Sesion.cs`, `EncriptadorContrasena.cs`, `Logger.cs` | Sesión actual y códigos de permiso, cifrado BCrypt y registro de actividades (archivo + bitácora) |
+| `dashboardVet/Base` | `FrmBase`, formulario base del que heredan todas las pantallas |
+| `dashboardVet/Helpers` | `Tema` (paleta), `Responsive` (diseño adaptable), `Mensajes` (MessageBox de aviso y confirmación), `Validaciones`, `Entrada`, `Texto` y `GridUtil` |
+| `dashboardVet/Controles` | Controles propios: `BotonModerno`, `BotonMenu`, `PanelTarjeta` y `PanelDegradado` |
+| `dashboardVet/ManejadorUIErrores.cs` | Muestra el mensaje y el código de cualquier error, lo registra en la bitácora y asigna tooltips a los controles |
+| `dashboardVet/<Pantalla>` | Una carpeta por pantalla (`Login`, `DashBoard`, `Inicio`, `Propietarios`, `Mascotas`, `Citas`, `Consultas`, `Vacunas`, `CatalogoVacunas`, `AplicacionVacunas`, `Usuarios`, `Roles`, `Bitacora`) con su `.cs` (lógica) y su `.Designer.cs` (diseño visual) |
 
 ## 4. Diagrama de casos de uso
 
@@ -269,18 +270,14 @@ Las Tablas 5 a 15 describen cada una de las tablas de la base de datos.
 
 ## 7. Seguridad y manejo de excepciones
 
-- **Cifrado:** `Modelos/Seguridad/EncriptadorContrasena.cs` usa `BCrypt.Net.BCrypt.HashPassword` y `Verify`.
+- **Cifrado:** `Modelos/EncriptadorContrasena.cs` usa `BCrypt.Net.BCrypt.HashPassword` y `Verify`.
   La base de datos nunca contiene contraseñas en texto plano.
 - **Autorización:** al iniciar sesión se cargan los permisos del rol en `Sesion`. El menú solo muestra los
   módulos permitidos y los botones Nuevo/Guardar/Eliminar se deshabilitan si falta el permiso `*_GESTIONAR`.
 - **Inyección SQL:** todas las consultas usan `SqlParameter`.
 - **Validaciones de entrada:** la clase `Entrada` bloquea teclas no permitidas mientras se escribe (nombres solo con letras; teléfono y DUI solo con números y formato automático; usuario y correo sin espacios) y `Validaciones` revisa los datos al guardar: nombre y apellido, teléfono que inicia con 2, 6 o 7, DUI con formato y dígito verificador, correo con formato válido, contraseña segura (sin el nombre de usuario ni patrones comunes), longitudes mínimas y máximas y fechas coherentes. También se evitan los duplicados (DUI, usuario, correo, vacuna y mascota del mismo propietario), se exige que la vacuna corresponda a la especie de la mascota, que las citas estén dentro del horario de atención y separadas al menos 30 minutos por veterinario, y que siempre quede un administrador activo. Los textos se limpian antes de guardarse y los campos con error se marcan con un icono rojo.
 - **Interfaz:** formularios diseñados en el Diseñador de Windows Forms con una paleta turquesa, tarjetas redondeadas, pantalla de inicio con estadísticas, menú lateral con iconos que se contrae en ventanas angostas y campos que pasan de dos columnas a una según el ancho.
-- **Excepciones:** cada acción de la Vista está protegida con `try/catch`. `Mensajes.Error` traduce los códigos de
-  `SqlException` (duplicados 2627/2601, integridad referencial 547, servidor inaccesible 53, BD inexistente 4060,
-  login 18456) a mensajes comprensibles en un `MessageBox`, y `Logger.Error` guarda el detalle en
-  `Logs/veterinaria_AAAAMMDD.log` y en la tabla `bitacora`. Una última red de seguridad en `Program.cs`
-  captura excepciones no controladas.
+- **Excepciones:** cada método de las clases `*DAL` captura `SqlException` y la convierte en una `AppException` con un código del `CatalogoErrores` (duplicados 2627/2601 → `ERR-SQL-002`, integridad referencial 547 → `ERR-SQL-003`, servidor inaccesible → `ERR-SQL-001`, BD inexistente 4060 → `ERR-SQL-006`); las reglas del negocio usan `ERR-NEG-001`. Cada acción de la Vista está protegida con `try/catch` y llama a `ManejadorUIErrores.MostrarError`, que muestra un `MessageBox` con el mensaje y el código, y `Logger.Error` guarda el detalle en `Logs/veterinaria_AAAAMMDD.log` y en la tabla `bitacora`. Una última red de seguridad en `Program.cs` (`Application.ThreadException`) captura las excepciones no controladas.
 - **Logging de actividades:** inicio/cierre de sesión, intentos fallidos y cada alta, modificación o baja.
 
 ### 7.1 Control de acceso por rol
@@ -299,17 +296,17 @@ La Tabla 16 relaciona cada criterio de la rúbrica (Instituto Técnico Ricaldone
 
 | # | Criterio | Dónde se cumple |
 |---|----------|-----------------|
-| 1 | Arquitectura MV | Proyectos `Modelos` y `Vista`; la Vista solo invoca clases de `Modelos.Datos` |
+| 1 | Arquitectura MV | Proyectos `Modelos` y `dashboardVet`; la Vista solo invoca las clases `*DAL` de `Modelos` |
 | 2 | Estructura de carpetas | Capas por proyecto y carpetas por funcionalidad (véase la Tabla 3) |
-| 3 | Login con BCrypt | `Vista/Login/frmLogin.cs`, `UsuarioDatos.Autenticar`, `EncriptadorContrasena` |
-| 4 | Gestión de usuarios | `Vista/Usuarios/frmUsuarios.cs` (CRUD + rol) |
-| 5 | Roles y permisos | Tablas `rol`/`permiso`/`rolPermiso`, `Sesion.Tiene`, `frmRoles` |
+| 3 | Login con BCrypt | `dashboardVet/Login/LoginVet.cs`, `LoginDAL.Autenticar`, `EncriptadorContrasena` |
+| 4 | Gestión de usuarios | `dashboardVet/Usuarios/Usuarios.cs` (CRUD + rol) |
+| 5 | Roles y permisos | Tablas `rol`/`permiso`/`rolPermiso`, `Sesion.Tiene`, `dashboardVet/Roles/Roles.cs`, `PermisosDAL` |
 | 6 | Seguridad | Hash BCrypt, consultas parametrizadas, reglas anti-bloqueo |
-| 7 | Scripts de BD | `BaseDatos/Veterinaria.sql` (comentado, con usuarios, roles y permisos) |
+| 7 | Scripts de BD | `BaseDatos/Veterinaria.sql` (con usuarios, roles y permisos) |
 | 8 | CRUD de todas las entidades | Propietarios, Mascotas, Citas, Consultas, Vacunas, Aplicaciones, Usuarios |
-| 9 | Excepciones | `try/catch` + `MessageBox` + `Logger` |
+| 9 | Excepciones | `try/catch` + `AppException` + `ManejadorUIErrores` (`MessageBox`) + `Logger` |
 | 10 | Interfaz de usuario | Formularios diseñados en el Designer con la misma estructura y colores; mensajes de validación claros |
-| 11 | Conexión a BD | `Conexion_DB/Conexion.cs` (servidor y base configurables, conexiones con `using`, consultas con parámetros) |
+| 11 | Conexión a BD | `Modelos/Conexion.cs` (servidor y base configurables, conexiones con `using`, consultas con parámetros) |
 | 12 | Documentación | Este documento |
 
 ## 9. Manual rápido de uso
@@ -317,8 +314,8 @@ La Tabla 16 relaciona cada criterio de la rúbrica (Instituto Técnico Ricaldone
 ### 9.1 Preparación
 
 1. Ejecutar `BaseDatos/Veterinaria.sql` en SQL Server y abrir `Veterinaria.sln` en Visual Studio.
-2. Escribir el nombre del servidor en `Modelos/Conexion_DB/Conexion.cs` (variable `servidor`).
-3. Establecer **Vista** como proyecto de inicio y ejecutar.
+2. Escribir el nombre del servidor en `Modelos/Conexion.cs` (constante `Servidor`).
+3. Establecer **dashboardVet** como proyecto de inicio y ejecutar.
 
 ### 9.2 Inicio de sesión
 
