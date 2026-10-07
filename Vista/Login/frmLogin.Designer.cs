@@ -100,8 +100,7 @@ namespace Vista.Login
             this.lblLema.ForeColor = System.Drawing.Color.FromArgb(204, 251, 241);
             this.lblLema.Height = 90;
             this.lblLema.Name = "lblLema";
-            this.lblLema.Text = "Sistema de gestión veterinaria
-Expedientes, vacunas y citas en un solo lugar.";
+            this.lblLema.Text = "Sistema de gestión veterinaria\nExpedientes, vacunas y citas en un solo lugar.";
             this.lblLema.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // lblMarca
